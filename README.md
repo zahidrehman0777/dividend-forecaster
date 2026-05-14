@@ -1,16 +1,43 @@
-# React + Vite
+# The Dividend Forecaster
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A free, no-signup dividend projection tool that models compound growth with DRIP, tax drag, inflation, and share splits over up to 100 years.
 
-Currently, two official plugins are available:
+Live at: https://thedividendforecaster.com
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Projection** — Model a single holding or build a multi-fund portfolio with custom allocations.
+- **Live Off Dividends** — Find your Freedom Date: the year and month your dividend income crosses above inflation-adjusted expenses.
+- **Goal Tracker** — Set a target amount with an optional growth rate and track progress toward it.
+- **CAGR Calculator** — Four modes: price return, dividend growth, total return, and goal-based (what rate do you need?).
+- **Compare** — Head-to-head fund comparison with a line chart and an animated bar race.
+- **Shareable Links** — Every scenario generates a copyable URL with all inputs encoded as query parameters.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- React + Vite
+- Recharts (data visualization)
+- Framer Motion (animations)
+- Tailwind CSS v4
+- Cloudflare Pages (hosting)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+Opens at http://localhost:5173.
+
+## Build
+
+```bash
+npm run build
+```
+
+Output goes to `dist/`. Cloudflare Pages auto-deploys on push to `main`.
+
+## License
+
+Personal project. Not open for contributions.
