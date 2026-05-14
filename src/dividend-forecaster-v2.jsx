@@ -2,6 +2,8 @@ import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { AreaChart, Area, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
 
+const ADS_ENABLED = false;
+
 const FONT = `'SF Pro Display', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif`;
 
 // Animation variants — subtle, no spring, max 0.4s
@@ -1540,9 +1542,11 @@ export default function DividendForecasterV2() {
         /* ===== CALCULATOR PAGE ===== */
         <motion.div key="calculator" {...pageT}>
         {/* Ad Slot — Top Banner */}
-        <div style={{ maxWidth:1200, margin:"0 auto", padding:"12px 24px 0" }}>
-          <div style={{ background:t.sf2, borderRadius:10, padding:"10px 0", textAlign:"center", fontSize:11, color:t.tx3, border:`1px dashed ${t.bd}` }}>Ad Space — Top Banner (728×90)</div>
-        </div>
+        {ADS_ENABLED && (
+          <div style={{ maxWidth:1200, margin:"0 auto", padding:"12px 24px 0" }}>
+            <div style={{ background:t.sf2, borderRadius:10, padding:"10px 0", textAlign:"center", fontSize:11, color:t.tx3, border:`1px dashed ${t.bd}` }}>Ad Space — Top Banner (728×90)</div>
+          </div>
+        )}
 
         {/* Calculator Tab Bar */}
         <div style={{ maxWidth:1200, margin:"0 auto", padding:"16px 24px 0" }}>
@@ -2677,9 +2681,11 @@ export default function DividendForecasterV2() {
         </AnimatePresence>
 
         {/* Ad Slot — Bottom Banner */}
-        <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 24px" }}>
-          <div style={{ background:t.sf2, borderRadius:10, padding:"10px 0", textAlign:"center", fontSize:11, color:t.tx3, border:`1px dashed ${t.bd}`, marginBottom:20 }}>Ad Space — Bottom Banner (728×90)</div>
-        </div>
+        {ADS_ENABLED && (
+          <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 24px" }}>
+            <div style={{ background:t.sf2, borderRadius:10, padding:"10px 0", textAlign:"center", fontSize:11, color:t.tx3, border:`1px dashed ${t.bd}`, marginBottom:20 }}>Ad Space — Bottom Banner (728×90)</div>
+          </div>
+        )}
       </div>
         </motion.div>
       )}
