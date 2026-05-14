@@ -202,20 +202,25 @@ const Tip = ({ active, payload, label, t, type }) => {
   </div>);
 };
 
-const InputField = ({ label, unit, value, onChange, min, max, step, t, placeholder }) => (
-  <div style={{ flex:"1 1 140px", minWidth:130 }}>
-    <label style={{ display:"block", fontSize:11, fontWeight:600, color:t.tx2, marginBottom:5, letterSpacing:"0.03em", textTransform:"uppercase" }}>{label}</label>
-    <div style={{ display:"flex", alignItems:"center", background:t.inBg, border:`1.5px solid ${t.inBd}`, borderRadius:10, overflow:"hidden", transition:"border-color 0.2s" }}>
-      {unit && <span style={{ padding:"9px 0 9px 10px", color:t.tx3, fontSize:14, fontWeight:500, userSelect:"none" }}>{unit}</span>}
-      <input type="number" value={value === 0 ? "" : value} min={min} max={max} step={step||1} placeholder={placeholder}
-        onChange={e => onChange(parseFloat(e.target.value)||0)}
-        onKeyDown={e => { if(e.key==="Enter") e.target.blur(); }}
-        style={{ flex:1, border:"none", outline:"none", background:"transparent", padding:unit?"9px 10px 9px 4px":"9px 10px", fontSize:14, fontWeight:500, color:t.tx, fontFamily:FONT, width:"100%" }}
-        onFocus={e => { e.target.parentElement.style.borderColor = t.inF; }}
-        onBlur={e => { e.target.parentElement.style.borderColor = t.inBd; onChange(parseFloat(e.target.value)||0); }} />
+const InputField = ({ label, unit, value, onChange, min, max, step, t, placeholder }) => {
+  const [focused, setFocused] = useState(false);
+  const [draft, setDraft] = useState("");
+  const display = focused ? draft : (value === 0 || !Number.isFinite(value) ? "" : String(value));
+  return (
+    <div style={{ flex:"1 1 140px", minWidth:130 }}>
+      <label style={{ display:"block", fontSize:11, fontWeight:600, color:t.tx2, marginBottom:5, letterSpacing:"0.03em", textTransform:"uppercase" }}>{label}</label>
+      <div style={{ display:"flex", alignItems:"center", background:t.inBg, border:`1.5px solid ${t.inBd}`, borderRadius:10, overflow:"hidden", transition:"border-color 0.2s" }}>
+        {unit && <span style={{ padding:"9px 0 9px 10px", color:t.tx3, fontSize:14, fontWeight:500, userSelect:"none" }}>{unit}</span>}
+        <input type="text" inputMode="decimal" value={display} placeholder={focused ? "" : placeholder}
+          onChange={e => setDraft(e.target.value)}
+          onKeyDown={e => { if(e.key==="Enter") e.target.blur(); }}
+          style={{ flex:1, border:"none", outline:"none", background:"transparent", padding:unit?"9px 10px 9px 4px":"9px 10px", fontSize:14, fontWeight:500, color:t.tx, fontFamily:FONT, width:"100%" }}
+          onFocus={e => { setDraft(value === 0 || !Number.isFinite(value) ? "" : String(value)); setFocused(true); e.target.parentElement.style.borderColor = t.inF; }}
+          onBlur={e => { setFocused(false); e.target.parentElement.style.borderColor = t.inBd; onChange(parseFloat(e.target.value)||0); }} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function DividendForecasterV2() {
   const [dark, setDark] = useState(false);
@@ -233,6 +238,8 @@ export default function DividendForecasterV2() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [inflationAdj, setInflationAdj] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
+  const [sharePriceFocused, setSharePriceFocused] = useState(false);
+  const [sharePriceDraft, setSharePriceDraft] = useState("");
   const [cagrMode, setCagrMode] = useState("price");
   const [priceMethod, setPriceMethod] = useState("prices");
   const [cagr, setCagr] = useState(() => {
@@ -1551,9 +1558,9 @@ export default function DividendForecasterV2() {
                   {priceMethod === "prices" ? (
                     <>
                       <div style={{ display:"flex", flexWrap:"wrap", gap:12, marginBottom:20 }}>
-                        <InputField t={t} label="Starting Price" unit="$" value={cagr.startPrice} onChange={v => uc("startPrice",v)} min={0} step={0.01} placeholder="50"/>
-                        <InputField t={t} label="Current Price" unit="$" value={cagr.endPrice} onChange={v => uc("endPrice",v)} min={0} step={0.01} placeholder="85"/>
-                        <InputField t={t} label="Years" unit="YR" value={cagr.priceYears} onChange={v => uc("priceYears",v)} min={0} step={0.1} placeholder="5"/>
+                        <InputField t={t} label="Starting Price" unit="$" value={cagr.startPrice} onChange={v => uc("startPrice",v)} min={0} step={0.01} placeholder="e.g. 50"/>
+                        <InputField t={t} label="Current Price" unit="$" value={cagr.endPrice} onChange={v => uc("endPrice",v)} min={0} step={0.01} placeholder="e.g. 85"/>
+                        <InputField t={t} label="Years" unit="YR" value={cagr.priceYears} onChange={v => uc("priceYears",v)} min={0} step={0.1} placeholder="e.g. 5"/>
                       </div>
                       <div style={{ background:t.blB, borderRadius:14, padding:"20px 24px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
                         <div>
@@ -1570,8 +1577,8 @@ export default function DividendForecasterV2() {
                   ) : (
                     <>
                       <div style={{ display:"flex", flexWrap:"wrap", gap:12, marginBottom:20 }}>
-                        <InputField t={t} label="Total Price Return" unit="%" value={cagr.priceReturnPct} onChange={v => uc("priceReturnPct",v)} min={-99} step={0.1} placeholder="70"/>
-                        <InputField t={t} label="Over Years" unit="YR" value={cagr.priceReturnYears} onChange={v => uc("priceReturnYears",v)} min={0} step={0.1} placeholder="5"/>
+                        <InputField t={t} label="Total Price Return" unit="%" value={cagr.priceReturnPct} onChange={v => uc("priceReturnPct",v)} min={-99} step={0.1} placeholder="e.g. 70"/>
+                        <InputField t={t} label="Over Years" unit="YR" value={cagr.priceReturnYears} onChange={v => uc("priceReturnYears",v)} min={0} step={0.1} placeholder="e.g. 5"/>
                       </div>
                       <div style={{ background:t.blB, borderRadius:14, padding:"20px 24px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
                         <div>
@@ -1607,9 +1614,9 @@ export default function DividendForecasterV2() {
                 <div>
                   <p style={{ fontSize:13, color:t.tx2, margin:"0 0 16px 0" }}>How fast is the dividend payout per share growing?</p>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:12, marginBottom:20 }}>
-                    <InputField t={t} label="Starting Dividend" unit="$" value={cagr.divStart} onChange={v => uc("divStart",v)} min={0} step={0.01} placeholder="1.30"/>
-                    <InputField t={t} label="Current Dividend" unit="$" value={cagr.divEnd} onChange={v => uc("divEnd",v)} min={0} step={0.01} placeholder="2.80"/>
-                    <InputField t={t} label="Years" unit="YR" value={cagr.divYears} onChange={v => uc("divYears",v)} min={0} step={0.1} placeholder="10"/>
+                    <InputField t={t} label="Starting Dividend" unit="$" value={cagr.divStart} onChange={v => uc("divStart",v)} min={0} step={0.01} placeholder="e.g. 1.30"/>
+                    <InputField t={t} label="Current Dividend" unit="$" value={cagr.divEnd} onChange={v => uc("divEnd",v)} min={0} step={0.01} placeholder="e.g. 2.80"/>
+                    <InputField t={t} label="Years" unit="YR" value={cagr.divYears} onChange={v => uc("divYears",v)} min={0} step={0.1} placeholder="e.g. 10"/>
                   </div>
                   <div style={{ background:t.puB, borderRadius:14, padding:"20px 24px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
                     <div>
@@ -1641,10 +1648,10 @@ export default function DividendForecasterV2() {
                 <div>
                   <p style={{ fontSize:13, color:t.tx2, margin:"0 0 16px 0" }}>What was the total return CAGR including dividends reinvested?</p>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:12, marginBottom:20 }}>
-                    <InputField t={t} label="Starting Price" unit="$" value={cagr.trStartPrice} onChange={v => uc("trStartPrice",v)} min={0} step={0.01} placeholder="50"/>
-                    <InputField t={t} label="Current Price" unit="$" value={cagr.trEndPrice} onChange={v => uc("trEndPrice",v)} min={0} step={0.01} placeholder="85"/>
-                    <InputField t={t} label="Avg Yield" unit="%" value={cagr.trYield} onChange={v => uc("trYield",v)} min={0} max={100} step={0.01} placeholder="3.5"/>
-                    <InputField t={t} label="Years" unit="YR" value={cagr.trYears} onChange={v => uc("trYears",v)} min={0} step={0.1} placeholder="5"/>
+                    <InputField t={t} label="Starting Price" unit="$" value={cagr.trStartPrice} onChange={v => uc("trStartPrice",v)} min={0} step={0.01} placeholder="e.g. 50"/>
+                    <InputField t={t} label="Current Price" unit="$" value={cagr.trEndPrice} onChange={v => uc("trEndPrice",v)} min={0} step={0.01} placeholder="e.g. 85"/>
+                    <InputField t={t} label="Avg Yield" unit="%" value={cagr.trYield} onChange={v => uc("trYield",v)} min={0} max={100} step={0.01} placeholder="e.g. 3.5"/>
+                    <InputField t={t} label="Years" unit="YR" value={cagr.trYears} onChange={v => uc("trYears",v)} min={0} step={0.1} placeholder="e.g. 5"/>
                   </div>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:12 }}>
                     <div style={{ flex:"1 1 200px", background:t.blB, borderRadius:14, padding:"20px 24px" }}>
@@ -1670,9 +1677,9 @@ export default function DividendForecasterV2() {
                 <div>
                   <p style={{ fontSize:13, color:t.tx2, margin:"0 0 16px 0" }}>What CAGR do you need to reach your target?</p>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:12, marginBottom:20 }}>
-                    <InputField t={t} label="Starting Amount" unit="$" value={cagr.goalStart} onChange={v => uc("goalStart",v)} min={0} placeholder="10000"/>
-                    <InputField t={t} label="Target Amount" unit="$" value={cagr.goalTarget} onChange={v => uc("goalTarget",v)} min={0} placeholder="1000000"/>
-                    <InputField t={t} label="Years" unit="YR" value={cagr.goalYears} onChange={v => uc("goalYears",v)} min={0} step={0.1} placeholder="30"/>
+                    <InputField t={t} label="Starting Amount" unit="$" value={cagr.goalStart} onChange={v => uc("goalStart",v)} min={0} placeholder="e.g. 10000"/>
+                    <InputField t={t} label="Target Amount" unit="$" value={cagr.goalTarget} onChange={v => uc("goalTarget",v)} min={0} placeholder="e.g. 1000000"/>
+                    <InputField t={t} label="Years" unit="YR" value={cagr.goalYears} onChange={v => uc("goalYears",v)} min={0} step={0.1} placeholder="e.g. 30"/>
                   </div>
                   <div style={{ background:t.orB, borderRadius:14, padding:"20px 24px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
                     <div>
@@ -1712,16 +1719,16 @@ export default function DividendForecasterV2() {
             <div style={{ background:t.sf, borderRadius:16, padding:"22px 24px", border:`1px solid ${t.bd2}`, boxShadow:t.sh, marginBottom:20 }}>
               <h2 style={{ fontSize:16, fontWeight:600, margin:"0 0 16px 0" }}>Race Settings</h2>
               <div style={{ display:"flex", flexWrap:"wrap", gap:12, marginBottom:12 }}>
-                <InputField t={t} label="Investment" unit="$" value={cmpShared.lumpSum} onChange={v => ucmp("lumpSum",v)} min={0} placeholder="10000"/>
-                <InputField t={t} label="Contribution" unit="$" value={cmpShared.contribAmt} onChange={v => ucmp("contribAmt",v)} min={0} placeholder="500"/>
+                <InputField t={t} label="Investment" unit="$" value={cmpShared.lumpSum} onChange={v => ucmp("lumpSum",v)} min={0} placeholder="e.g. 10000"/>
+                <InputField t={t} label="Contribution" unit="$" value={cmpShared.contribAmt} onChange={v => ucmp("contribAmt",v)} min={0} placeholder="e.g. 500"/>
                 <div style={{ flex:"1 1 130px", minWidth:120 }}>
-                  <label style={{ display:"block", fontSize:11, fontWeight:600, color:t.tx2, marginBottom:5, letterSpacing:"0.03em", textTransform:"uppercase" }}>Frequency</label>
-                  <select value={cmpShared.contribFreq} onChange={e => ucmp("contribFreq",e.target.value)}
-                    style={{ width:"100%", padding:"9px 10px", borderRadius:10, border:`1.5px solid ${t.inBd}`, background:t.inBg, color:t.tx, fontSize:14, fontWeight:500, fontFamily:FONT, outline:"none", cursor:"pointer", appearance:"auto" }}>
+                  <label style={{ display:"block", fontSize:11, fontWeight:600, color:cmpShared.contribAmt > 0 ? t.tx2 : t.tx3, marginBottom:5, letterSpacing:"0.03em", textTransform:"uppercase", transition:"color 0.2s" }}>Frequency</label>
+                  <select value={cmpShared.contribFreq} onChange={e => ucmp("contribFreq",e.target.value)} disabled={cmpShared.contribAmt === 0}
+                    style={{ width:"100%", padding:"9px 10px", borderRadius:10, border:`1.5px solid ${t.inBd}`, background:t.inBg, color:cmpShared.contribAmt > 0 ? t.tx : t.tx3, fontSize:14, fontWeight:500, fontFamily:FONT, outline:"none", cursor:cmpShared.contribAmt > 0 ? "pointer" : "not-allowed", appearance:"auto", opacity:cmpShared.contribAmt > 0 ? 1 : 0.5, transition:"opacity 0.2s, color 0.2s" }}>
                     {Object.entries(freqLabels).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
                   </select>
                 </div>
-                <InputField t={t} label="Years" unit="YR" value={cmpShared.years} onChange={v => ucmp("years",Math.min(100,v))} min={0} max={100} placeholder="30"/>
+                <InputField t={t} label="Years" unit="YR" value={cmpShared.years} onChange={v => ucmp("years",Math.min(100,v))} min={0} max={100} placeholder="e.g. 30"/>
               </div>
               <div style={{ display:"flex", flexWrap:"wrap", gap:12, alignItems:"center" }}>
                 <div style={{ display:"flex", alignItems:"center", gap:8 }}>
@@ -1730,8 +1737,8 @@ export default function DividendForecasterV2() {
                   </button>
                   <span style={{ fontSize:13, fontWeight:500, color:t.tx2 }}>DRIP {cmpShared.drip?"ON":"OFF"}</span>
                 </div>
-                <InputField t={t} label="Div Tax" unit="%" value={cmpShared.divTaxRate} onChange={v => ucmp("divTaxRate",v)} min={0} max={100} step={0.1} placeholder="15"/>
-                <InputField t={t} label="Cap Gains Tax" unit="%" value={cmpShared.capGainsTaxRate} onChange={v => ucmp("capGainsTaxRate",v)} min={0} max={100} step={0.1} placeholder="15"/>
+                <InputField t={t} label="Div Tax" unit="%" value={cmpShared.divTaxRate} onChange={v => ucmp("divTaxRate",v)} min={0} max={100} step={0.1} placeholder="e.g. 15"/>
+                <InputField t={t} label="Cap Gains Tax" unit="%" value={cmpShared.capGainsTaxRate} onChange={v => ucmp("capGainsTaxRate",v)} min={0} max={100} step={0.1} placeholder="e.g. 15"/>
               </div>
             </div>
 
@@ -1990,16 +1997,16 @@ export default function DividendForecasterV2() {
             <div style={{ background:t.sf, borderRadius:16, padding:"22px 24px", border:`1px solid ${t.bd2}`, boxShadow:t.sh, marginBottom:20 }}>
               <h2 style={{ fontSize:16, fontWeight:600, margin:"0 0 16px 0" }}>Portfolio Settings</h2>
               <div style={{ display:"flex", flexWrap:"wrap", gap:12, marginBottom:12 }}>
-                <InputField t={t} label="Total Investment" unit="$" value={pfShared.lumpSum} onChange={v => ups("lumpSum",v)} min={0} placeholder="10000"/>
-                <InputField t={t} label="Contribution" unit="$" value={pfShared.contribAmt} onChange={v => ups("contribAmt",v)} min={0} placeholder="500"/>
+                <InputField t={t} label="Total Investment" unit="$" value={pfShared.lumpSum} onChange={v => ups("lumpSum",v)} min={0} placeholder="e.g. 10000"/>
+                <InputField t={t} label="Contribution" unit="$" value={pfShared.contribAmt} onChange={v => ups("contribAmt",v)} min={0} placeholder="e.g. 500"/>
                 <div style={{ flex:"1 1 140px", minWidth:130 }}>
-                  <label style={{ display:"block", fontSize:11, fontWeight:600, color:t.tx2, marginBottom:5, letterSpacing:"0.03em", textTransform:"uppercase" }}>Frequency</label>
-                  <select value={pfShared.contribFreq} onChange={e => ups("contribFreq", e.target.value)}
-                    style={{ width:"100%", padding:"9px 10px", borderRadius:10, border:`1.5px solid ${t.inBd}`, background:t.inBg, color:t.tx, fontSize:14, fontWeight:500, fontFamily:FONT, outline:"none", cursor:"pointer", appearance:"auto" }}>
+                  <label style={{ display:"block", fontSize:11, fontWeight:600, color:pfShared.contribAmt > 0 ? t.tx2 : t.tx3, marginBottom:5, letterSpacing:"0.03em", textTransform:"uppercase", transition:"color 0.2s" }}>Frequency</label>
+                  <select value={pfShared.contribFreq} onChange={e => ups("contribFreq", e.target.value)} disabled={pfShared.contribAmt === 0}
+                    style={{ width:"100%", padding:"9px 10px", borderRadius:10, border:`1.5px solid ${t.inBd}`, background:t.inBg, color:pfShared.contribAmt > 0 ? t.tx : t.tx3, fontSize:14, fontWeight:500, fontFamily:FONT, outline:"none", cursor:pfShared.contribAmt > 0 ? "pointer" : "not-allowed", appearance:"auto", opacity:pfShared.contribAmt > 0 ? 1 : 0.5, transition:"opacity 0.2s, color 0.2s" }}>
                     {Object.entries(freqLabels).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
                   </select>
                 </div>
-                <InputField t={t} label="Years" unit="YR" value={pfShared.years} onChange={v => ups("years",Math.min(100,v))} min={0} max={100} placeholder="30"/>
+                <InputField t={t} label="Years" unit="YR" value={pfShared.years} onChange={v => ups("years",Math.min(100,v))} min={0} max={100} placeholder="e.g. 30"/>
               </div>
               <div style={{ display:"flex", flexWrap:"wrap", gap:12, alignItems:"center" }}>
                 <div style={{ display:"flex", alignItems:"center", gap:8 }}>
@@ -2008,14 +2015,14 @@ export default function DividendForecasterV2() {
                   </button>
                   <span style={{ fontSize:13, fontWeight:500, color:t.tx2 }}>DRIP {pfShared.drip?"ON":"OFF"}</span>
                 </div>
-                <InputField t={t} label="Div Tax" unit="%" value={pfShared.divTaxRate} onChange={v => ups("divTaxRate",v)} min={0} max={100} step={0.1} placeholder="15"/>
-                <InputField t={t} label="Cap Gains Tax" unit="%" value={pfShared.capGainsTaxRate} onChange={v => ups("capGainsTaxRate",v)} min={0} max={100} step={0.1} placeholder="15"/>
+                <InputField t={t} label="Div Tax" unit="%" value={pfShared.divTaxRate} onChange={v => ups("divTaxRate",v)} min={0} max={100} step={0.1} placeholder="e.g. 15"/>
+                <InputField t={t} label="Cap Gains Tax" unit="%" value={pfShared.capGainsTaxRate} onChange={v => ups("capGainsTaxRate",v)} min={0} max={100} step={0.1} placeholder="e.g. 15"/>
                 {mode === "liveoff" && <>
-                  <InputField t={t} label="Monthly Expenses" unit="$" value={pfShared.costOfLiving} onChange={v => ups("costOfLiving",v)} min={0} placeholder="4000"/>
-                  <InputField t={t} label="Inflation" unit="%" value={pfShared.inflation} onChange={v => ups("inflation",v)} min={0} max={30} step={0.01} placeholder="2.79"/>
+                  <InputField t={t} label="Monthly Expenses" unit="$" value={pfShared.costOfLiving} onChange={v => ups("costOfLiving",v)} min={0} placeholder="e.g. 4000"/>
+                  <InputField t={t} label="Inflation" unit="%" value={pfShared.inflation} onChange={v => ups("inflation",v)} min={0} max={30} step={0.01} placeholder="e.g. 2.79"/>
                 </>}
                 {mode === "goal" && <>
-                  <InputField t={t} label="Target Amount" unit="$" value={goalTarget} onChange={setGoalTarget} min={0} placeholder="1000000"/>
+                  <InputField t={t} label="Target Amount" unit="$" value={goalTarget} onChange={setGoalTarget} min={0} placeholder="e.g. 1000000"/>
                   <InputField t={t} label="Target Growth" unit="%" value={goalGrowthRate} onChange={setGoalGrowthRate} min={0} step={0.1}/>
                 </>}
               </div>
@@ -2403,8 +2410,12 @@ export default function DividendForecasterV2() {
               </div>
               <div style={{ display:"flex", alignItems:"center", gap:4, background:t.sf2, borderRadius:8, padding:"4px 8px" }}>
                 <span style={{ fontSize:11, color:t.tx3, fontWeight:500 }}>$</span>
-                <input type="number" value={inp.sharePrice === 0 ? "" : inp.sharePrice} min={0} step={0.01} placeholder="100"
-                  onChange={e => u("sharePrice", parseFloat(e.target.value) || 0)}
+                <input type="text" inputMode="decimal"
+                  value={sharePriceFocused ? sharePriceDraft : (inp.sharePrice === 0 || !Number.isFinite(inp.sharePrice) ? "" : String(inp.sharePrice))}
+                  placeholder={sharePriceFocused ? "" : "e.g. 100"}
+                  onChange={e => setSharePriceDraft(e.target.value)}
+                  onFocus={() => { setSharePriceDraft(inp.sharePrice === 0 || !Number.isFinite(inp.sharePrice) ? "" : String(inp.sharePrice)); setSharePriceFocused(true); }}
+                  onBlur={e => { setSharePriceFocused(false); u("sharePrice", parseFloat(e.target.value) || 0); }}
                   style={{ border:"none", outline:"none", background:"transparent", fontSize:13, fontWeight:600, color:t.tx, width:60, fontFamily:FONT, textAlign:"center" }}/>
                 <span style={{ fontSize:10, color:t.tx3, fontWeight:500 }}>/share</span>
               </div>
@@ -2415,22 +2426,22 @@ export default function DividendForecasterV2() {
           </div>
 
           <div style={{ display:"flex", flexWrap:"wrap", gap:12, marginBottom:16 }}>
-            <InputField t={t} label="Lump Sum" unit="$" value={inp.lumpSum} onChange={v => u("lumpSum",v)} min={0} placeholder="10000"/>
-            <InputField t={t} label="Contribution" unit="$" value={inp.contribAmt} onChange={v => u("contribAmt",v)} min={0} placeholder="500"/>
+            <InputField t={t} label="Lump Sum" unit="$" value={inp.lumpSum} onChange={v => u("lumpSum",v)} min={0} placeholder="e.g. 10000"/>
+            <InputField t={t} label="Contribution" unit="$" value={inp.contribAmt} onChange={v => u("contribAmt",v)} min={0} placeholder="e.g. 500"/>
             <div style={{ flex:"1 1 140px", minWidth:130 }}>
-              <label style={{ display:"block", fontSize:11, fontWeight:600, color:t.tx2, marginBottom:5, letterSpacing:"0.03em", textTransform:"uppercase" }}>Frequency</label>
-              <select value={inp.contribFreq} onChange={e => u("contribFreq", e.target.value)}
-                style={{ width:"100%", padding:"9px 10px", borderRadius:10, border:`1.5px solid ${t.inBd}`, background:t.inBg, color:t.tx, fontSize:14, fontWeight:500, fontFamily:FONT, outline:"none", cursor:"pointer", appearance:"auto" }}>
+              <label style={{ display:"block", fontSize:11, fontWeight:600, color:inp.contribAmt > 0 ? t.tx2 : t.tx3, marginBottom:5, letterSpacing:"0.03em", textTransform:"uppercase", transition:"color 0.2s" }}>Frequency</label>
+              <select value={inp.contribFreq} onChange={e => u("contribFreq", e.target.value)} disabled={inp.contribAmt === 0}
+                style={{ width:"100%", padding:"9px 10px", borderRadius:10, border:`1.5px solid ${t.inBd}`, background:t.inBg, color:inp.contribAmt > 0 ? t.tx : t.tx3, fontSize:14, fontWeight:500, fontFamily:FONT, outline:"none", cursor:inp.contribAmt > 0 ? "pointer" : "not-allowed", appearance:"auto", opacity:inp.contribAmt > 0 ? 1 : 0.5, transition:"opacity 0.2s, color 0.2s" }}>
                 {Object.entries(freqLabels).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
-            <InputField t={t} label="Years" unit="YR" value={inp.years} onChange={v => { const yr = Math.min(100,v); u("years",yr); setSelectedYear("all"); }} min={0} max={100} placeholder="30"/>
+            <InputField t={t} label="Years" unit="YR" value={inp.years} onChange={v => { const yr = Math.min(100,v); u("years",yr); setSelectedYear("all"); }} min={0} max={100} placeholder="e.g. 30"/>
           </div>
 
           <div style={{ display:"flex", flexWrap:"wrap", gap:12, marginBottom:16 }}>
-            <InputField t={t} label="Div Yield" unit="%" value={inp.divYield} onChange={v => u("divYield",v)} min={0} step={0.01} placeholder="3.6"/>
-            <InputField t={t} label="Div Growth" unit="%" value={inp.divGrowth} onChange={v => u("divGrowth",v)} min={0} step={0.01} placeholder="7"/>
-            <InputField t={t} label="Price Apprec." unit="%" value={inp.appreciation} onChange={v => u("appreciation",v)} min={-50} step={0.01} placeholder="7"/>
+            <InputField t={t} label="Div Yield" unit="%" value={inp.divYield} onChange={v => u("divYield",v)} min={0} step={0.01} placeholder="e.g. 3.6"/>
+            <InputField t={t} label="Div Growth" unit="%" value={inp.divGrowth} onChange={v => u("divGrowth",v)} min={0} step={0.01} placeholder="e.g. 7"/>
+            <InputField t={t} label="Price Apprec." unit="%" value={inp.appreciation} onChange={v => u("appreciation",v)} min={-50} step={0.01} placeholder="e.g. 7"/>
           </div>
 
           <div style={{ display:"flex", flexWrap:"wrap", gap:12, alignItems:"flex-end", marginBottom:16 }}>
@@ -2448,10 +2459,10 @@ export default function DividendForecasterV2() {
               </select>
             </div>
             {mode === "liveoff" &&
-              <InputField t={t} label="Monthly Expenses" unit="$" value={inp.costOfLiving} onChange={v => u("costOfLiving",v)} min={0} placeholder="4000"/>
+              <InputField t={t} label="Monthly Expenses" unit="$" value={inp.costOfLiving} onChange={v => u("costOfLiving",v)} min={0} placeholder="e.g. 4000"/>
             }
             {mode === "goal" && <>
-              <InputField t={t} label="Target Amount" unit="$" value={goalTarget} onChange={setGoalTarget} min={0} placeholder="1000000"/>
+              <InputField t={t} label="Target Amount" unit="$" value={goalTarget} onChange={setGoalTarget} min={0} placeholder="e.g. 1000000"/>
               <InputField t={t} label="Target Growth" unit="%" value={goalGrowthRate} onChange={setGoalGrowthRate} min={0} step={0.1}/>
             </>}
           </div>
@@ -2467,10 +2478,10 @@ export default function DividendForecasterV2() {
           {showAdvanced && (
             <div style={{ marginTop:12, paddingTop:12, borderTop:`1px solid ${t.bd2}` }}>
               <div style={{ display:"flex", flexWrap:"wrap", gap:12, marginBottom:12 }}>
-                <InputField t={t} label="Expense Ratio" unit="%" value={inp.expenseRatio} onChange={v => u("expenseRatio",v)} min={0} max={10} step={0.01} placeholder="0.03"/>
-                <InputField t={t} label="Div Tax" unit="%" value={inp.divTaxRate} onChange={v => u("divTaxRate",v)} min={0} max={100} step={0.1} placeholder="15"/>
-                <InputField t={t} label="Cap Gains Tax" unit="%" value={inp.capGainsTaxRate} onChange={v => u("capGainsTaxRate",v)} min={0} max={100} step={0.1} placeholder="15"/>
-                <InputField t={t} label="Inflation Rate" unit="%" value={inp.inflation} onChange={v => u("inflation",v)} min={0} max={30} step={0.01} placeholder="2.79"/>
+                <InputField t={t} label="Expense Ratio" unit="%" value={inp.expenseRatio} onChange={v => u("expenseRatio",v)} min={0} max={10} step={0.01} placeholder="e.g. 0.03"/>
+                <InputField t={t} label="Div Tax" unit="%" value={inp.divTaxRate} onChange={v => u("divTaxRate",v)} min={0} max={100} step={0.1} placeholder="e.g. 15"/>
+                <InputField t={t} label="Cap Gains Tax" unit="%" value={inp.capGainsTaxRate} onChange={v => u("capGainsTaxRate",v)} min={0} max={100} step={0.1} placeholder="e.g. 15"/>
+                <InputField t={t} label="Inflation Rate" unit="%" value={inp.inflation} onChange={v => u("inflation",v)} min={0} max={30} step={0.01} placeholder="e.g. 2.79"/>
               </div>
               <div style={{ display:"flex", flexWrap:"wrap", gap:12, alignItems:"flex-end" }}>
                 <div style={{ flex:"1 1 110px", minWidth:100 }}>
