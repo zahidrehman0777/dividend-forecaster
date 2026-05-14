@@ -1468,6 +1468,40 @@ export default function DividendForecasterV2() {
             <button onClick={() => setPage("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Open the Calculator</button>
           </div>
         </motion.div>
+      ) : page === "contact" ? (
+        <motion.div key="contact" {...pageT} style={{ maxWidth:800, margin:"0 auto", padding:"48px 24px 60px" }}>
+          <h1 style={{ fontSize:32, fontWeight:700, marginBottom:8, letterSpacing:"-0.02em" }}>Contact</h1>
+          <p style={{ fontSize:13, color:t.tx3, marginBottom:32 }}>We read every message. Here is how to reach us, and what we can — and cannot — help with.</p>
+
+          <div style={{ background:t.sf, borderRadius:14, padding:"22px 28px", border:`1px solid ${t.bd2}`, marginBottom:14 }}>
+            <h2 style={{ fontSize:17, fontWeight:700, marginBottom:8 }}>General Inquiries</h2>
+            <p style={{ fontSize:13, lineHeight:1.7, color:t.tx2, margin:0 }}>For general questions about Dividend Forecaster, how the calculator works, or feedback on the tool, email us at <a href="mailto:contact@thedividendforecaster.com" style={{ color:t.ac, textDecoration:"underline" }}>contact@thedividendforecaster.com</a>. We aim to respond within two business days.</p>
+          </div>
+
+          <div style={{ background:t.sf, borderRadius:14, padding:"22px 28px", border:`1px solid ${t.bd2}`, marginBottom:14 }}>
+            <h2 style={{ fontSize:17, fontWeight:700, marginBottom:8 }}>Bug Reports &amp; Feedback</h2>
+            <p style={{ fontSize:13, lineHeight:1.7, color:t.tx2, margin:0 }}>Found something broken or behaving unexpectedly? Email <a href="mailto:contact@thedividendforecaster.com" style={{ color:t.ac, textDecoration:"underline" }}>contact@thedividendforecaster.com</a> with as much detail as possible. The most useful reports include: which tab you were on, what you typed into which field, what you expected to happen, what actually happened, and your browser and device. Screenshots help.</p>
+          </div>
+
+          <div style={{ background:t.sf, borderRadius:14, padding:"22px 28px", border:`1px solid ${t.bd2}`, marginBottom:14 }}>
+            <h2 style={{ fontSize:17, fontWeight:700, marginBottom:8 }}>Partnership &amp; Press</h2>
+            <p style={{ fontSize:13, lineHeight:1.7, color:t.tx2, margin:0 }}>For partnership inquiries, press requests, or media questions, email <a href="mailto:contact@thedividendforecaster.com" style={{ color:t.ac, textDecoration:"underline" }}>contact@thedividendforecaster.com</a> with "Partnership" or "Press" in the subject line.</p>
+          </div>
+
+          <div style={{ background:t.sf, borderRadius:14, padding:"22px 28px", border:`1px solid ${t.bd2}`, marginBottom:14 }}>
+            <h2 style={{ fontSize:17, fontWeight:700, marginBottom:8 }}>What We Cannot Help With</h2>
+            <p style={{ fontSize:13, lineHeight:1.7, color:t.tx2, margin:0 }}>Dividend Forecaster is a calculation tool, not a financial advisor. We cannot provide personalized investment advice, recommend specific funds or stocks, predict market movements, or answer questions about your individual tax situation. For decisions about your money, please consult a licensed financial advisor or tax professional.</p>
+          </div>
+
+          <div style={{ background:t.sf, borderRadius:14, padding:"22px 28px", border:`1px solid ${t.bd2}`, marginBottom:32 }}>
+            <h2 style={{ fontSize:17, fontWeight:700, marginBottom:8 }}>Privacy</h2>
+            <p style={{ fontSize:13, lineHeight:1.7, color:t.tx2, margin:0 }}>Questions about how we handle data are covered in our Privacy Policy. We do not collect personal information from visitors — everything you type into the calculator stays in your browser.</p>
+          </div>
+
+          <div style={{ textAlign:"center" }}>
+            <button onClick={() => setPage("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Open the Calculator</button>
+          </div>
+        </motion.div>
       ) : page === "privacy" ? (
         <motion.div key="privacy" {...pageT} style={{ maxWidth:800, margin:"0 auto", padding:"48px 24px 60px" }}>
           <h1 style={{ fontSize:32, fontWeight:700, marginBottom:8, letterSpacing:"-0.02em" }}>Privacy Policy</h1>
@@ -2676,6 +2710,8 @@ export default function DividendForecasterV2() {
                 <button onClick={() => setPage("methodology")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>How It Works</button>
                 <button onClick={() => setPage("learn")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Learn Dividend Investing</button>
                 <button onClick={() => setPage("about")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>About</button>
+                <button onClick={() => setPage("contact")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Contact</button>
+                <button onClick={() => setPage("privacy")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Privacy Policy</button>
               </div>
             </div>
           </div>
@@ -2683,9 +2719,8 @@ export default function DividendForecasterV2() {
             <p style={{ fontSize:11, lineHeight:1.6, color:t.tx3, margin:"0 0 8px 0" }}>
               <strong>Disclaimer:</strong> Dividend Forecaster is for educational and informational purposes only. It is not financial advice. All projections are hypothetical and assume constant rates. Actual results will vary. Dividend payments are not guaranteed. Past performance does not guarantee future results. Consult a qualified financial advisor before making investment decisions.
             </p>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:8 }}>
+            <div style={{ display:"flex", justifyContent:"flex-start", alignItems:"center", flexWrap:"wrap", gap:8 }}>
               <p style={{ fontSize:11, color:t.tx3, margin:0 }}>© {new Date().getFullYear()} Dividend Forecaster. All rights reserved.</p>
-              <button onClick={() => setPage("privacy")} style={{ fontSize:11, color:t.tx3, background:"none", border:"none", padding:0, cursor:"pointer", fontFamily:FONT }}>Privacy Policy</button>
             </div>
           </div>
         </div>
