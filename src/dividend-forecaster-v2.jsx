@@ -466,6 +466,40 @@ export default function DividendForecasterV2() {
   const [raceFrame, setRaceFrame] = useState(0);
   const [racePlaying, setRacePlaying] = useState(false);
 
+  // Restore Portfolio / Compare / projMode from shared-link URL params (runs once on mount).
+  // Single Holding (inp.*) and CAGR are already restored inside their own useState lazy initializers.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    const pm = params.get("pm");
+    if (pm === "p") setProjMode("portfolio");
+    else if (pm === "s") setProjMode("single");
+
+    const pfBlob = params.get("pf");
+    if (pfBlob) {
+      try {
+        const json = decodeURIComponent(escape(atob(pfBlob)));
+        const payload = JSON.parse(json);
+        if (payload.funds && Array.isArray(payload.funds) && payload.funds.length > 0) setPfFunds(payload.funds);
+        if (payload.shared && typeof payload.shared === "object") setPfShared(payload.shared);
+      } catch (e) {
+        console.warn("Failed to parse pf param:", e);
+      }
+    }
+
+    const cmpBlob = params.get("cmp");
+    if (cmpBlob) {
+      try {
+        const json = decodeURIComponent(escape(atob(cmpBlob)));
+        const payload = JSON.parse(json);
+        if (payload.competitors && Array.isArray(payload.competitors) && payload.competitors.length > 0) setCmpCompetitors(payload.competitors);
+        if (payload.shared && typeof payload.shared === "object") setCmpShared(payload.shared);
+      } catch (e) {
+        console.warn("Failed to parse cmp param:", e);
+      }
+    }
+  }, []);
+
   const ucmp = useCallback((k,v) => setCmpShared(p => ({...p,[k]:v})), []);
   const addCompetitor = useCallback(() => {
     setCmpCompetitors(cs => {
@@ -590,8 +624,24 @@ export default function DividendForecasterV2() {
       if (cagrMode === "total") { p.set("cts", cagr.trStartPrice); p.set("cte", cagr.trEndPrice); p.set("cty", cagr.trYield); p.set("ctr", cagr.trYears); }
       if (cagrMode === "goal") { p.set("cgs", cagr.goalStart); p.set("cgt", cagr.goalTarget); p.set("cgy", cagr.goalYears); }
     }
+    // Portfolio sub-pill + per-fund data. Only written when actually on Portfolio
+    // (scoped to projection/liveoff/goal modes so it can't clash with CAGR's pm=priceMethod).
+    if ((mode === "projection" || mode === "liveoff" || mode === "goal") && projMode === "portfolio") {
+      p.set("pm", "p");
+      try {
+        const payload = { funds: pfFunds, shared: pfShared };
+        p.set("pf", btoa(unescape(encodeURIComponent(JSON.stringify(payload)))));
+      } catch (e) { /* encoding failure — fall through without pf param */ }
+    }
+    // Compare per-competitor data.
+    if (mode === "compare") {
+      try {
+        const payload = { competitors: cmpCompetitors, shared: cmpShared };
+        p.set("cmp", btoa(unescape(encodeURIComponent(JSON.stringify(payload)))));
+      } catch (e) { /* encoding failure — fall through without cmp param */ }
+    }
     return `${window.location.origin}${window.location.pathname}?${p.toString()}`;
-  }, [inp, mode, cagrMode, priceMethod, cagr, goalTarget, goalGrowthRate]);
+  }, [inp, mode, cagrMode, priceMethod, cagr, goalTarget, goalGrowthRate, projMode, pfFunds, pfShared, cmpCompetitors, cmpShared]);
 
   const copyLink = useCallback(() => {
     const link = generateLink();
