@@ -227,6 +227,7 @@ const InputField = ({ label, unit, value, onChange, min, max, step, t, placehold
 export default function DividendForecasterV2() {
   const [dark, setDark] = useState(false);
   const t = dark ? D : L;
+  useEffect(() => { document.documentElement.classList.toggle("dark", dark); }, [dark]);
   const [page, setPage] = useState("calculator");
   const [mode, setMode] = useState("projection");
   const [projMode, setProjMode] = useState("single");
