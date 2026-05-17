@@ -277,7 +277,7 @@ export default function DividendForecasterV2() {
   });
 
   const defaultInp = {
-    ticker:"", lumpSum:0, contribAmt:0, contribFreq:"monthly", years:0, sharePrice:0,
+    ticker:"", lumpSum:0, contribAmt:0, contribFreq:"monthly", years:30, sharePrice:0,
     divYield:0, divGrowth:0, appreciation:0, expenseRatio:0, divTaxRate:0, capGainsTaxRate:0, drip:true,
     divFrequency:"quarterly", splitRatio:"none", splitInterval:0, costOfLiving:0, inflation:0,
   };
@@ -321,7 +321,7 @@ export default function DividendForecasterV2() {
     { id:2, ticker:"", alloc:30, divYield:0, divGrowth:0, appreciation:0, expenseRatio:0, divFrequency:"quarterly", sharePrice:0 },
     { id:3, ticker:"", alloc:20, divYield:0, divGrowth:0, appreciation:0, expenseRatio:0, divFrequency:"quarterly", sharePrice:0 },
   ]);
-  const [pfShared, setPfShared] = useState({ lumpSum:0, contribAmt:0, contribFreq:"monthly", years:0, drip:true, divTaxRate:0, capGainsTaxRate:0, inflation:0, costOfLiving:0 });
+  const [pfShared, setPfShared] = useState({ lumpSum:0, contribAmt:0, contribFreq:"monthly", years:30, drip:true, divTaxRate:0, capGainsTaxRate:0, inflation:0, costOfLiving:0 });
   const [pfChartTab, setPfChartTab] = useState("combined");
   const [pfSelectedYear, setPfSelectedYear] = useState("all");
   const [pfInflationAdj, setPfInflationAdj] = useState(false);
@@ -458,7 +458,7 @@ export default function DividendForecasterV2() {
     { id:1, name:"Fund 1", holdings:[{ id:1, ticker:"", alloc:100, sharePrice:0, divYield:0, divGrowth:0, appreciation:0, expenseRatio:0, divFrequency:"quarterly" }]},
     { id:2, name:"Fund 2", holdings:[{ id:1, ticker:"", alloc:100, sharePrice:0, divYield:0, divGrowth:0, appreciation:0, expenseRatio:0, divFrequency:"quarterly" }]},
   ]);
-  const [cmpShared, setCmpShared] = useState({ lumpSum:0, contribAmt:0, contribFreq:"monthly", years:0, drip:true, divTaxRate:0, capGainsTaxRate:0, inflation:0, chartStyle:"line" });
+  const [cmpShared, setCmpShared] = useState({ lumpSum:0, contribAmt:0, contribFreq:"monthly", years:30, drip:true, divTaxRate:0, capGainsTaxRate:0, inflation:0, chartStyle:"line" });
   const [cmpChartTab, setCmpChartTab] = useState("value");
   const [cmpSelectedYear, setCmpSelectedYear] = useState("all");
   const [cmpExpanded, setCmpExpanded] = useState(null);
