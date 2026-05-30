@@ -2731,6 +2731,79 @@ export default function DividendForecasterV2() {
         )}
         </AnimatePresence>
 
+        {/* Educational article — visible on every mode, sits below the mode-specific content */}
+        {(() => {
+          const sh = { fontSize:24, fontWeight:700, color:t.tx, margin:"36px 0 14px 0", letterSpacing:"-0.02em", fontFamily:FONT };
+          const sh1 = { ...sh, marginTop:0 };
+          const p = { fontSize:15, lineHeight:1.7, color:t.tx, margin:"0 0 14px 0", fontFamily:FONT };
+          const b = { fontWeight:700, color:t.tx };
+          const faqs = [
+            { q:"Is this a real financial calculator or just an estimate?", a:"It's a projection tool. It does real math on the assumptions you give it, but those assumptions are yours. Markets don't grow at a steady rate, so treat the output as a model, not a promise." },
+            { q:"What's the difference between Div Yield and Div Growth?", a:"Div Yield is what a fund pays right now as a percentage of its price. Div Growth is how fast that payout rises each year. Yield tells you today's income. Growth tells you tomorrow's." },
+            { q:"Should I always turn DRIP on?", a:"For long-term growth, DRIP ON reinvests every dividend and compounds your returns faster. For income you need to spend now, DRIP OFF lets dividends pay out as cash. The tool lets you try both, so you can see the gap." },
+            { q:"How do you handle dividend tax?", a:"If you set a Div Tax rate, the tool takes it out the moment each dividend is paid, before reinvesting. Set it to zero for a Roth IRA or other tax-free account." },
+            { q:"Why doesn't my Walk-Away Value match my Portfolio Value?", a:"Walk-Away Value subtracts the capital gains tax you'd owe if you sold everything today. If your Cap Gains Tax is zero, the two numbers match. If you set a real rate, Walk-Away Value is lower." },
+            { q:"What's a realistic Div Growth rate?", a:"It varies by fund. Established dividend payers often grow their payout in the mid-single digits to low double digits each year. Look up a fund's dividend growth history before assuming a number." },
+            { q:"Can I use this for ETFs and REITs?", a:"Yes. Any dividend-paying investment works. Enter the Div Yield, Div Growth, and Price Appreciation that fit the fund you're modeling." },
+            { q:"Does this account for inflation?", a:"The core projection shows nominal dollars. Use the Inflation Rate field under Advanced Options, then toggle \"Today's dollars\" above the Snapshot, to see the value in today's purchasing power." },
+            { q:"Why does the income look so small in the early years?", a:"Dividends start small and compound. The early years are slow on purpose. The growth shows up in the later years, which is why running a longer timeline reveals the real story." },
+            { q:"What is Freedom Date?", a:"In Live Off Dividends mode, Freedom Date is the year and month when your projected dividend income passes your monthly expenses. That's the moment your portfolio is paying for your life instead of you paying into it." },
+          ];
+          return (
+            <section style={{ maxWidth:880, margin:"40px auto 0", padding:"40px 4px 0", borderTop:`1px solid ${t.bd2}` }}>
+              <h2 style={sh1}>How to Use the Dividend Forecaster</h2>
+              <p style={p}>Every input changes the projection. Here's what each one does.</p>
+              <p style={p}><strong style={b}>Lump Sum</strong> is your starting amount. It's the money you're putting in today, before any contributions. Leave it at zero if you're starting from scratch and adding over time.</p>
+              <p style={p}><strong style={b}>Contribution</strong> is what you add on a schedule, and <strong style={b}>Frequency</strong> is how often. Most people set Frequency to Monthly, but Daily, Weekly, Bi-Weekly, Quarterly, and Yearly all work. This is often the input that does the heavy lifting over long timelines.</p>
+              <p style={p}><strong style={b}>Years</strong> is how long you stay invested. The default is thirty. Compounding rewards time more than almost anything else, so this number matters more than it looks.</p>
+              <p style={p}><strong style={b}>Div Yield</strong> is the percentage a fund pays back to you each year. A 3.5% yield on $100 of shares is $3.50 a year. You can find this on any fund's page under its dividend or distribution data.</p>
+              <p style={p}><strong style={b}>Div Growth</strong> is how fast that payout rises each year. A company raising its dividend 7% a year means a bigger payout per share next year, then bigger again the year after. This is the input people forget, and it's the one that compounds.</p>
+              <p style={p}><strong style={b}>Price Appreciation</strong> is how much the share price itself grows each year. This is separate from dividends. It's the part of your return that comes from the stock going up.</p>
+              <p style={p}><strong style={b}>DRIP ON / DRIP OFF</strong> controls dividend reinvestment. With it on, every dividend buys more shares automatically. With it off, dividends pay out as cash and your share count stays flat.</p>
+              <p style={p}><strong style={b}>Div Payout Freq</strong> sets how often dividends are paid: Monthly, Quarterly, Semi-Annually, or Annually. Most US dividend funds pay quarterly.</p>
+              <p style={p}>Under <strong style={b}>Advanced Options</strong>, you can set <strong style={b}>Expense Ratio</strong>, <strong style={b}>Div Tax</strong>, <strong style={b}>Cap Gains Tax</strong>, <strong style={b}>Inflation Rate</strong>, and a <strong style={b}>Share Split</strong> schedule. Set Div Tax and Cap Gains Tax to zero for a tax-free account like a Roth IRA. Set real rates if you want to see the after-tax picture in a taxable account.</p>
+              <p style={p}>You don't have to fill in everything. The tool works with the basics and treats the rest as zero.</p>
+
+              <h2 style={sh}>How Your Projection Is Calculated</h2>
+              <p style={p}>Most calculators hide their math. This one doesn't, so here's exactly what happens under the hood.</p>
+              <p style={p}>The tool runs your money forward one month at a time. Each month, it pays the dividend you've earned, applies any growth, and rolls the result into the next month.</p>
+              <p style={p}><strong style={b}>Div Growth raises the payout, not the yield.</strong> Once a year, your dividend-per-share steps up by your growth rate. If a fund pays $3 a share and grows 7%, next year it pays $3.21 a share. The year after, $3.43. The yield you see drifts on its own as the share price moves, but the dollar payout per share is what actually grows. That's how real companies raise dividends, so that's how the tool models it.</p>
+              <p style={p}><strong style={b}>DRIP buys shares at the current price.</strong> When reinvestment is on, each dividend buys more shares at whatever the share price is that month. Those new shares earn their own dividends next month. That's the compounding engine. More shares paying more dividends buying more shares.</p>
+              <p style={p}><strong style={b}>Taxes come out before reinvestment.</strong> If you set a Div Tax rate, the tool takes that tax out the moment each dividend is paid. Only the after-tax amount gets reinvested. So a tax drag slows your compounding in real time, not just at the end.</p>
+              <p style={p}><strong style={b}>Expense Ratio comes off the top.</strong> If you set one, the tool deducts it monthly from your portfolio value, the same way a real fund quietly deducts its expense ratio from NAV. Small numbers add up over thirty years.</p>
+              <p style={p}><strong style={b}>Walk-Away Value is the hypothetical after-tax number.</strong> Your Portfolio Value is the full value of your shares. Walk-Away Value answers a different question: what would you keep if you sold everything today and paid capital gains tax? The tool figures your gain (your Portfolio Value minus what you put in), taxes only that gain, and subtracts it. This number is just a what-if. The tax never actually comes out of your projection, because you only owe capital gains tax when you sell.</p>
+              <p style={p}>That's the whole model. No hidden assumptions beyond the ones you set.</p>
+
+              <h2 style={sh}>A Worked Example</h2>
+              <p style={p}>Say you start with a Lump Sum of $10,000 and a Contribution of $500 a month. You set Div Yield at 3.5%, Div Growth at 7%, and Price Appreciation at 6%. DRIP is on. Div Tax and Cap Gains Tax are zero, like a Roth IRA. You run it for thirty years.</p>
+              <p style={p}>In year one, your dividends are modest. The Portfolio Value is still small, so a 3.5% yield doesn't pay much yet. Your Net Dividend Income card shows a small monthly number. Not life-changing.</p>
+              <p style={p}>But watch what Div Growth does over time. The payout per share keeps stepping up each year. Your share count keeps climbing too, because DRIP buys more shares with every dividend and your monthly contributions add even more. Both numbers grow together for three decades straight.</p>
+              <p style={p}>By year thirty, the Portfolio Value is many times what you put in. Most of that final number isn't your contributions. It's the market and the compounding doing the work across thirty years. Your job was to keep showing up.</p>
+              <p style={p}>Look at the Yield on Cost card to see this from a different angle. Yield on Cost measures your current dividend income against what you originally paid, not today's price. With these inputs, a starting yield of 3.5% is projected to climb to roughly 31% by year thirty. That means your dividend income that year is projected to equal nearly a third of every dollar you ever put in, paid back to you annually. That's the reward for thirty years of Div Growth compounding on top of itself.</p>
+              <p style={p}>That's the point of running thirty years instead of five. The early years look slow. The late years don't.</p>
+
+              <h2 style={sh}>Understanding Your Results</h2>
+              <p style={p}>The Snapshot section shows six cards. Here's what each one is telling you.</p>
+              <p style={p}><strong style={b}>Portfolio Value</strong> is the full projected value of your shares. This is the headline number, but it's not what lands in your pocket each month.</p>
+              <p style={p}><strong style={b}>Walk-Away Value</strong> is what you'd keep after capital gains tax if you sold today. If your Cap Gains Tax is zero, this matches your Portfolio Value, because there's no tax to pay.</p>
+              <p style={p}><strong style={b}>Net Dividend Income</strong> is what your shares are projected to pay in dividends, after Div Tax. The card shows a monthly figure with the annual amount underneath. This is the number that matters if your goal is income you can live on.</p>
+              <p style={p}><strong style={b}>Shares Owned</strong> is your share count. It climbs over time through DRIP and contributions. More shares means more dividends next year.</p>
+              <p style={p}><strong style={b}>Total Cost</strong> adds up everything the projection cost you: capital gains tax if you sold, dividend tax paid along the way, and fund fees. It's shown in red because it's the drag on your returns.</p>
+              <p style={p}><strong style={b}>Yield on Cost</strong> is your current annual dividend income measured against what you originally paid, not today's price. It climbs over time as Div Growth raises the payout. A fund yielding 3.5% today could be yielding 30% or higher on your original cost decades later, depending on Div Growth. That's the reward for holding through the growth.</p>
+              <p style={p}>Read the year-by-year table above this section, not just the final number. The columns show Year, Contributed, Portfolio, Shares, Net Dividend, Walk-Away, YoC, Tax Paid, Fees, and Price. The shape of the climb tells you more than the endpoint. You'll see exactly when the compounding starts to outrun your contributions.</p>
+              <p style={p}>If you switch to Live Off Dividends mode, you'll also see a <strong style={b}>Freedom Date</strong>: the year and month when your projected dividend income covers your monthly expenses. That's the moment your portfolio is paying for your life.</p>
+
+              <h2 style={sh}>Frequently Asked Questions</h2>
+              {faqs.map((f, i) => (
+                <div key={i} style={{ marginBottom:20 }}>
+                  <p style={{ ...p, fontWeight:700, margin:"0 0 6px 0" }}>{f.q}</p>
+                  <p style={{ ...p, margin:0 }}>{f.a}</p>
+                </div>
+              ))}
+            </section>
+          );
+        })()}
+
         {/* Ad Slot — Bottom Banner */}
         {ADS_ENABLED && (
           <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 24px" }}>
