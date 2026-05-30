@@ -12,6 +12,18 @@ const modeT = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacit
 const cardContainer = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
 const cardItem = { hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } } };
 
+// URL routing — keep in sync with the page state values used inside DividendForecasterV2.
+const PAGE_TO_PATH = { calculator: "/", learn: "/learn", methodology: "/methodology", about: "/about", contact: "/contact", privacy: "/privacy" };
+const PATH_TO_PAGE = { "/": "calculator", "/learn": "learn", "/methodology": "methodology", "/about": "about", "/contact": "contact", "/privacy": "privacy" };
+const PAGE_TITLES = {
+  calculator: "Dividend Forecaster — Free Dividend Calculator",
+  learn: "Learn — Dividend Forecaster",
+  methodology: "Methodology — Dividend Forecaster",
+  about: "About — Dividend Forecaster",
+  contact: "Contact — Dividend Forecaster",
+  privacy: "Privacy Policy — Dividend Forecaster",
+};
+
 const L = { bg:"#FAFAFA", sf:"#FFF", sf2:"#F5F5F7", bd:"#E5E5EA", bd2:"#F0F0F2", tx:"#1D1D1F", tx2:"#6E6E73", tx3:"#AEAEB2",
   ac:"#0071E3", gn:"#34C759", gnB:"#F0FDF4", or:"#FF9500", orB:"#FFFBEB", pu:"#AF52DE", puB:"#FAF5FF", bl:"#007AFF", blB:"#EFF6FF",
   rd:"#FF3B30", rdB:"#FEF2F2", grid:"#F0F0F2", ttBg:"#FFF", ttBd:"#E5E5EA", sh:"0 1px 3px rgba(0,0,0,0.04),0 4px 12px rgba(0,0,0,0.03)",
@@ -228,7 +240,26 @@ export default function DividendForecasterV2() {
   const [dark, setDark] = useState(false);
   const t = dark ? D : L;
   useEffect(() => { document.documentElement.classList.toggle("dark", dark); }, [dark]);
-  const [page, setPage] = useState("calculator");
+  const [page, setPage] = useState(() => {
+    if (typeof window === "undefined") return "calculator";
+    return PATH_TO_PAGE[window.location.pathname] || "calculator";
+  });
+  const navigate = useCallback((newPage) => {
+    setPage(newPage);
+    const newPath = PAGE_TO_PATH[newPage] || "/";
+    if (typeof window !== "undefined" && window.location.pathname !== newPath) {
+      window.history.pushState(null, "", newPath);
+    }
+  }, []);
+  useEffect(() => {
+    const handlePopState = () => {
+      const newPage = PATH_TO_PAGE[window.location.pathname] || "calculator";
+      setPage(newPage);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+  useEffect(() => { document.title = PAGE_TITLES[page] || PAGE_TITLES.calculator; }, [page]);
   const [mode, setMode] = useState("projection");
   const [projMode, setProjMode] = useState("single");
   const [chartTab, setChartTab] = useState("overview");
@@ -951,7 +982,7 @@ export default function DividendForecasterV2() {
       {/* Header */}
       <div style={{ borderBottom:`1px solid ${t.bd}`, background:t.hd, backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", position:"sticky", top:0, zIndex:100 }}>
         <div style={{ maxWidth:1200, margin:"0 auto", padding:"14px 24px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
-          <div style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer" }} onClick={() => setPage("calculator")}>
+          <div style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer" }} onClick={() => navigate("calculator")}>
             <div style={{ width:32, height:32, borderRadius:9, background:`linear-gradient(135deg, ${t.ac}, ${t.pu})`, display:"flex", alignItems:"center", justifyContent:"center", color:"#FFF", fontWeight:700, fontSize:14 }}>DF</div>
             <div>
               <div style={{ fontSize:16, fontWeight:600, letterSpacing:"-0.01em" }}>Dividend Forecaster</div>
@@ -961,7 +992,7 @@ export default function DividendForecasterV2() {
           <div style={{ display:"flex", alignItems:"center", gap:6 }}>
             <div style={{ display:"flex", gap:2 }}>
               {[{id:"calculator",l:"Calculator"},{id:"methodology",l:"How It Works"},{id:"learn",l:"Learn"},{id:"about",l:"About"}].map(p => (
-                <button key={p.id} onClick={() => setPage(p.id)} style={{
+                <button key={p.id} onClick={() => navigate(p.id)} style={{
                   padding:"7px 14px", borderRadius:8, border:"none", fontSize:12, fontWeight:page===p.id?600:400,
                   background:page===p.id?t.sf:"transparent", color:page===p.id?t.tx:t.tx3,
                   cursor:"pointer", fontFamily:FONT, boxShadow:page===p.id?"0 1px 4px rgba(0,0,0,0.08)":"none", transition:"all 0.2s"
@@ -1392,9 +1423,9 @@ export default function DividendForecasterV2() {
             <h2 style={{ fontSize:22, fontWeight:600, marginBottom:8 }}>Ready to Run Your Numbers?</h2>
             <p style={{ fontSize:14, color:t.tx2, marginBottom:16 }}>Every concept above is modeled in our calculator. Enter your real numbers and see what your plan looks like.</p>
             <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
-              <button onClick={() => { setPage("calculator"); setMode("projection"); }} style={{ padding:"12px 24px", borderRadius:10, border:"none", background:t.ac, color:"#FFF", fontSize:14, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Projection</button>
-              <button onClick={() => { setPage("calculator"); setMode("liveoff"); }} style={{ padding:"12px 24px", borderRadius:10, border:"none", background:t.gn, color:"#FFF", fontSize:14, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Live Off Dividends</button>
-              <button onClick={() => { setPage("calculator"); setMode("compare"); }} style={{ padding:"12px 24px", borderRadius:10, border:"none", background:t.pu, color:"#FFF", fontSize:14, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Compare</button>
+              <button onClick={() => { navigate("calculator"); setMode("projection"); }} style={{ padding:"12px 24px", borderRadius:10, border:"none", background:t.ac, color:"#FFF", fontSize:14, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Projection</button>
+              <button onClick={() => { navigate("calculator"); setMode("liveoff"); }} style={{ padding:"12px 24px", borderRadius:10, border:"none", background:t.gn, color:"#FFF", fontSize:14, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Live Off Dividends</button>
+              <button onClick={() => { navigate("calculator"); setMode("compare"); }} style={{ padding:"12px 24px", borderRadius:10, border:"none", background:t.pu, color:"#FFF", fontSize:14, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Compare</button>
             </div>
           </div>
         </motion.div>
@@ -1450,7 +1481,7 @@ export default function DividendForecasterV2() {
           </div>
 
           <div style={{ textAlign:"center" }}>
-            <button onClick={() => setPage("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT,  }}>Try the Calculator</button>
+            <button onClick={() => navigate("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT,  }}>Try the Calculator</button>
           </div>
         </motion.div>);
       })() : page === "methodology" ? (
@@ -1518,7 +1549,7 @@ export default function DividendForecasterV2() {
           </div>
 
           <div style={{ textAlign:"center" }}>
-            <button onClick={() => setPage("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Open the Calculator</button>
+            <button onClick={() => navigate("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Open the Calculator</button>
           </div>
         </motion.div>
       ) : page === "contact" ? (
@@ -1552,7 +1583,7 @@ export default function DividendForecasterV2() {
           </div>
 
           <div style={{ textAlign:"center" }}>
-            <button onClick={() => setPage("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Open the Calculator</button>
+            <button onClick={() => navigate("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Open the Calculator</button>
           </div>
         </motion.div>
       ) : page === "privacy" ? (
@@ -1586,7 +1617,7 @@ export default function DividendForecasterV2() {
           </div>
 
           <div style={{ textAlign:"center" }}>
-            <button onClick={() => setPage("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Open the Calculator</button>
+            <button onClick={() => navigate("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Open the Calculator</button>
           </div>
         </motion.div>
       ) : (
@@ -2830,18 +2861,18 @@ export default function DividendForecasterV2() {
               <div style={{ fontSize:11, fontWeight:700, color:t.tx2, textTransform:"uppercase", letterSpacing:"0.05em", marginBottom:10 }}>Tools</div>
               <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
                 {[{l:"Projection Calculator",m:"projection"},{l:"Live Off Dividends",m:"liveoff"},{l:"Goal Tracker",m:"goal"},{l:"Compare Funds",m:"compare"},{l:"CAGR Calculator",m:"cagr"}].map(item => (
-                  <button key={item.m} onClick={() => { setPage("calculator"); setMode(item.m); }} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>{item.l}</button>
+                  <button key={item.m} onClick={() => { navigate("calculator"); setMode(item.m); }} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>{item.l}</button>
                 ))}
               </div>
             </div>
             <div style={{ flex:"0 0 auto" }}>
               <div style={{ fontSize:11, fontWeight:700, color:t.tx2, textTransform:"uppercase", letterSpacing:"0.05em", marginBottom:10 }}>Resources</div>
               <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-                <button onClick={() => setPage("methodology")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>How It Works</button>
-                <button onClick={() => setPage("learn")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Learn Dividend Investing</button>
-                <button onClick={() => setPage("about")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>About</button>
-                <button onClick={() => setPage("contact")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Contact</button>
-                <button onClick={() => setPage("privacy")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Privacy Policy</button>
+                <button onClick={() => navigate("methodology")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>How It Works</button>
+                <button onClick={() => navigate("learn")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Learn Dividend Investing</button>
+                <button onClick={() => navigate("about")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>About</button>
+                <button onClick={() => navigate("contact")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Contact</button>
+                <button onClick={() => navigate("privacy")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Privacy Policy</button>
               </div>
             </div>
           </div>
