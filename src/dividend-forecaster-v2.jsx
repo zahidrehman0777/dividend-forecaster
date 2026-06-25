@@ -236,12 +236,15 @@ const InputField = ({ label, unit, value, onChange, min, max, step, t, placehold
   );
 };
 
-export default function DividendForecasterV2() {
+export default function DividendForecasterV2({ ssrPath } = {}) {
   const [dark, setDark] = useState(false);
   const t = dark ? D : L;
   useEffect(() => { document.documentElement.classList.toggle("dark", dark); }, [dark]);
+  // Gate DOM-measuring components (Recharts ResponsiveContainer) so they only render after mount.
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => { setIsClient(true); }, []);
   const [page, setPage] = useState(() => {
-    if (typeof window === "undefined") return "calculator";
+    if (typeof window === "undefined") return PATH_TO_PAGE[ssrPath] || "calculator";
     return PATH_TO_PAGE[window.location.pathname] || "calculator";
   });
   const navigate = useCallback((newPage) => {
@@ -844,6 +847,7 @@ export default function DividendForecasterV2() {
 
   const renderChart = () => {
     const h = 340;
+    if (!isClient) return <div style={{ height:h }} />;
     const cd = chartData;
     if (chartTab === "overview") return (
       <ResponsiveContainer width="100%" height={h}>
@@ -2012,6 +2016,7 @@ export default function DividendForecasterV2() {
                 </div>);
               })() : (<>
               <div style={{ height:380 }}>
+                {isClient && (
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={cmpChartData} margin={{ top:10,right:10,left:10,bottom:0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke={t.grid}/>
@@ -2025,6 +2030,7 @@ export default function DividendForecasterV2() {
                     ))}
                   </LineChart>
                 </ResponsiveContainer>
+                )}
               </div>
               <div style={{ display:"flex", gap:16, marginTop:12, flexWrap:"wrap", justifyContent:"center" }}>
                 {cmpResults.map(cr => (
@@ -2369,6 +2375,7 @@ export default function DividendForecasterV2() {
                 </div>
               )}
               <div style={{ height:340 }}>
+                {isClient && (
                 <ResponsiveContainer width="100%" height="100%">
                   {pfChartTab === "crossover" ? (() => {
                     const cxData = pfResults.pfCrossoverChartData ? (pfSelectedYear === "all" ? pfResults.pfCrossoverChartData : pfResults.pfCrossoverChartData.filter(d => d.year <= pfSelectedYear)) : pfChartData;
@@ -2469,6 +2476,7 @@ export default function DividendForecasterV2() {
                     </AreaChart>
                   ) : null}
                 </ResponsiveContainer>
+                )}
               </div>
             </div>
 

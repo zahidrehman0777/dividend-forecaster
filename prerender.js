@@ -1,0 +1,55 @@
+// Static site generation step. Runs after `vite build` and `vite build --ssr`.
+// For each route, renders the React tree to an HTML string, splices it into the
+// built index.html template, rewrites <title>, <meta description>, canonical
+// and og:url to be unique per route, then writes dist/<route>/index.html.
+//
+// IMPORTANT: this is purely the crawler-visible HTML. The client still does a
+// fresh createRoot.render() over the top, so live behavior is identical to a
+// vanilla SPA build.
+
+import fs from 'node:fs'
+import path from 'node:path'
+import url from 'node:url'
+
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
+const abs = (p) => path.resolve(__dirname, p)
+
+const template = fs.readFileSync(abs('dist/index.html'), 'utf-8')
+const { render } = await import('./dist-server/entry-server.js')
+
+const SITE = 'https://thedividendforecaster.com'
+
+const HOMEPAGE_TITLE = 'Dividend Forecaster — Free DRIP Calculator & Dividend Income Projector'
+const HOMEPAGE_DESCRIPTION = 'Free dividend calculator with DRIP projections, portfolio builder, fund comparison, yield on cost tracking, and Live Off Dividends planning. Project 30 years of dividend income with tax, expense ratio, and inflation modeling. No signup required.'
+
+const routes = {
+  '/':            { title: HOMEPAGE_TITLE, description: HOMEPAGE_DESCRIPTION },
+  '/learn':       { title: 'Dividend Investing Guide — Dividend Forecaster', description: 'A 20-concept walkthrough of dividend investing: yield, growth, DRIP, compounding, yield on cost, ETFs, expense ratios, taxes, walk-away value, and how to live off dividends. Plain-language explanations with worked examples.' },
+  '/about':       { title: 'About — Dividend Forecaster', description: 'About Dividend Forecaster: a free dividend calculator built to show the real numbers — taxes, fees, walk-away value, and the year-by-year path to financial freedom. No accounts, no paywalls.' },
+  '/methodology': { title: 'Methodology — How the Calculator Works', description: 'How the Dividend Forecaster math works: the monthly projection engine, how dividend growth is applied, how DRIP reinvests after tax, how the expense ratio drag is modeled, and how Walk-Away Value is computed.' },
+  '/contact':     { title: 'Contact — Dividend Forecaster', description: 'How to reach Dividend Forecaster: general questions, bug reports, feedback, partnership and press inquiries. We do not provide personalized financial advice.' },
+  '/privacy':     { title: 'Privacy Policy — Dividend Forecaster', description: 'Dividend Forecaster privacy policy: no personal data collected, no accounts, no server storage. Third-party cookies via Google AdSense for ad personalization; opt-out instructions included.' },
+}
+
+let count = 0
+for (const [route, meta] of Object.entries(routes)) {
+  const appHtml = render(route)
+  const canonical = SITE + (route === '/' ? '/' : route)
+  let html = template.replace('<!--app-html-->', appHtml)
+  html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${meta.title}</title>`)
+  html = html.replace(/(<meta name="title" content=")[\s\S]*?(" \/>)/, `$1${meta.title}$2`)
+  html = html.replace(/(<meta name="description" content=")[\s\S]*?(" \/>)/, `$1${meta.description}$2`)
+  html = html.replace(/(<link rel="canonical" href=")[\s\S]*?(" \/>)/, `$1${canonical}$2`)
+  html = html.replace(/(<meta property="og:url" content=")[\s\S]*?(" \/>)/, `$1${canonical}$2`)
+  html = html.replace(/(<meta property="og:title" content=")[\s\S]*?(" \/>)/, `$1${meta.title}$2`)
+  html = html.replace(/(<meta property="og:description" content=")[\s\S]*?(" \/>)/, `$1${meta.description}$2`)
+  html = html.replace(/(<meta property="twitter:url" content=")[\s\S]*?(" \/>)/, `$1${canonical}$2`)
+  html = html.replace(/(<meta property="twitter:title" content=")[\s\S]*?(" \/>)/, `$1${meta.title}$2`)
+  html = html.replace(/(<meta property="twitter:description" content=")[\s\S]*?(" \/>)/, `$1${meta.description}$2`)
+  const outPath = route === '/' ? 'dist/index.html' : `dist${route}/index.html`
+  fs.mkdirSync(path.dirname(abs(outPath)), { recursive: true })
+  fs.writeFileSync(abs(outPath), html)
+  console.log('pre-rendered', outPath)
+  count++
+}
+console.log(`\n✓ wrote ${count} pre-rendered HTML files`)
