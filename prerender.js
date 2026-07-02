@@ -24,7 +24,7 @@ const HOMEPAGE_DESCRIPTION = 'Free dividend calculator with DRIP projections, po
 
 const routes = {
   '/':            { title: HOMEPAGE_TITLE, description: HOMEPAGE_DESCRIPTION },
-  '/learn':       { title: 'Dividend Investing Guide — Dividend Forecaster', description: 'A 20-concept walkthrough of dividend investing: yield, growth, DRIP, compounding, yield on cost, ETFs, expense ratios, taxes, walk-away value, and how to live off dividends. Plain-language explanations with worked examples.' },
+  '/learn':       { title: 'Dividend Investing Guide — Dividend Forecaster', description: 'Six in-depth dividend investing guides plus a plain-language glossary: dividends, yield, DRIP, compounding, taxes, expense ratios, and every number the free calculator shows.' },
   '/about':       { title: 'About — Dividend Forecaster', description: 'About Dividend Forecaster: a free dividend calculator built to show the real numbers — taxes, fees, walk-away value, and the year-by-year path to financial freedom. No accounts, no paywalls.' },
   '/methodology': { title: 'Methodology — How the Calculator Works', description: 'How the Dividend Forecaster math works: the monthly projection engine, how dividend growth is applied, how DRIP reinvests after tax, how the expense ratio drag is modeled, and how Walk-Away Value is computed.' },
   '/contact':     { title: 'Contact — Dividend Forecaster', description: 'How to reach Dividend Forecaster: general questions, bug reports, feedback, partnership and press inquiries. We do not provide personalized financial advice.' },
