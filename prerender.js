@@ -29,12 +29,15 @@ const routes = {
   '/methodology': { title: 'Methodology — How the Calculator Works', description: 'How the Dividend Forecaster math works: the monthly projection engine, how dividend growth is applied, how DRIP reinvests after tax, how the expense ratio drag is modeled, and how Walk-Away Value is computed.' },
   '/contact':     { title: 'Contact — Dividend Forecaster', description: 'How to reach Dividend Forecaster: general questions, bug reports, feedback, partnership and press inquiries. We do not provide personalized financial advice.' },
   '/privacy':     { title: 'Privacy Policy — Dividend Forecaster', description: 'Dividend Forecaster privacy policy: no personal data collected, no accounts, no server storage. Third-party cookies via Google AdSense for ad personalization; opt-out instructions included.' },
+  '/learn/how-to-invest-in-etfs-for-beginners': { title: 'How to Invest in ETFs for Beginners — Dividend Forecaster', description: 'A plain-language guide to investing your first $5,000 in ETFs: what an ETF actually is, three filters for choosing funds, how to buy, what to do after you buy — and a 30-year worked projection you can rerun with your own assumptions in the free calculator.' },
 }
 
 let count = 0
 for (const [route, meta] of Object.entries(routes)) {
   const appHtml = render(route)
-  const canonical = SITE + (route === '/' ? '/' : route)
+  // Cloudflare Pages serves subdir routes with a trailing slash (it 308-redirects
+  // /foo -> /foo/). Canonical must point at the terminal URL, not the redirect.
+  const canonical = SITE + (route === '/' ? '/' : `${route}/`)
   let html = template.replace('<!--app-html-->', appHtml)
   html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${meta.title}</title>`)
   html = html.replace(/(<meta name="title" content=")[\s\S]*?(" \/>)/, `$1${meta.title}$2`)

@@ -1,6 +1,12 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { AreaChart, Area, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
+import EtfBeginners from "./articles/EtfBeginners.jsx";
+
+// Article slug → component. Add here when scaffolding a new article.
+const ARTICLE_COMPONENTS = {
+  "how-to-invest-in-etfs-for-beginners": EtfBeginners,
+};
 
 const ADS_ENABLED = false;
 
@@ -13,6 +19,12 @@ const cardContainer = { hidden: {}, show: { transition: { staggerChildren: 0.05 
 const cardItem = { hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } } };
 
 // URL routing — keep in sync with the page state values used inside DividendForecasterV2.
+// Articles under /learn/<slug> use page keys of the form "article:<slug>". To add an article:
+// 1) add its slug + display title to ARTICLES here, 2) register a component for it in
+// ARTICLE_COMPONENTS below, 3) add the route to prerender.js.
+const ARTICLES = [
+  { slug: "how-to-invest-in-etfs-for-beginners", title: "How to Invest in ETFs for Beginners — Dividend Forecaster" },
+];
 const PAGE_TO_PATH = { calculator: "/", learn: "/learn", methodology: "/methodology", about: "/about", contact: "/contact", privacy: "/privacy" };
 const PATH_TO_PAGE = { "/": "calculator", "/learn": "learn", "/methodology": "methodology", "/about": "about", "/contact": "contact", "/privacy": "privacy" };
 const PAGE_TITLES = {
@@ -23,6 +35,13 @@ const PAGE_TITLES = {
   contact: "Contact — Dividend Forecaster",
   privacy: "Privacy Policy — Dividend Forecaster",
 };
+for (const { slug, title } of ARTICLES) {
+  const key = `article:${slug}`;
+  const path = `/learn/${slug}`;
+  PAGE_TO_PATH[key] = path;
+  PATH_TO_PAGE[path] = key;
+  PAGE_TITLES[key] = title;
+}
 
 const L = { bg:"#FAFAFA", sf:"#FFF", sf2:"#F5F5F7", bd:"#E5E5EA", bd2:"#F0F0F2", tx:"#1D1D1F", tx2:"#6E6E73", tx3:"#AEAEB2",
   ac:"#0071E3", gn:"#34C759", gnB:"#F0FDF4", or:"#FF9500", orB:"#FFFBEB", pu:"#AF52DE", puB:"#FAF5FF", bl:"#007AFF", blB:"#EFF6FF",
@@ -1016,6 +1035,11 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
         <motion.div key="learn" {...pageT} style={{ maxWidth:800, margin:"0 auto", padding:"48px 24px 60px" }}>
           <h1 style={{ fontSize:32, fontWeight:700, marginBottom:8, letterSpacing:"-0.02em" }}>Dividend Investing: Everything You Need to Know</h1>
           <p style={{ fontSize:12, color:t.tx3, marginBottom:16 }}>Written by Zahid Rehman · Updated June 2026</p>
+          <div style={{ background:t.sf, border:`1px solid ${t.bd2}`, borderRadius:16, padding:"20px 24px", marginBottom:28 }}>
+            <div style={{ fontSize:11, fontWeight:700, color:t.tx3, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Guides</div>
+            <button onClick={() => navigate("article:how-to-invest-in-etfs-for-beginners")} style={{ background:"none", border:"none", padding:0, color:t.ac, fontSize:16, fontWeight:600, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>How to Invest in ETFs for Beginners</button>
+            <p style={{ fontSize:13, lineHeight:1.6, color:t.tx2, margin:"4px 0 0 0" }}>A plain-language guide to your first $5,000 — and a 30-year projection you can rerun yourself.</p>
+          </div>
           <p style={{ fontSize:15, lineHeight:1.7, color:t.tx2, marginBottom:32 }}>20 concepts. Each one builds on the last. By the end, you will understand how dividend investing works — from the first dollar to financial freedom.</p>
 
           <div style={{ background:t.sf, borderRadius:16, padding:"24px 28px", border:`1px solid ${t.bd2}`, marginBottom:28 }}>
@@ -1626,6 +1650,11 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
             <button onClick={() => navigate("calculator")} style={{ padding:"14px 32px", borderRadius:12, border:"none", background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:FONT }}>Open the Calculator</button>
           </div>
         </motion.div>
+      ) : page.startsWith("article:") && ARTICLE_COMPONENTS[page.slice("article:".length)] ? (
+        (() => {
+          const ArticleComponent = ARTICLE_COMPONENTS[page.slice("article:".length)];
+          return <ArticleComponent t={t} navigate={navigate} />;
+        })()
       ) : (
         /* ===== CALCULATOR PAGE ===== */
         <motion.div key="calculator" {...pageT}>
