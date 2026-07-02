@@ -2,10 +2,16 @@ import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { AreaChart, Area, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
 import EtfBeginners from "./articles/EtfBeginners.jsx";
+import WhatDripDoes from "./articles/WhatDripDoes.jsx";
+import WhatIsADividend from "./articles/WhatIsADividend.jsx";
+import YieldVsGrowth from "./articles/YieldVsGrowth.jsx";
 
 // Article slug → component. Add here when scaffolding a new article.
 const ARTICLE_COMPONENTS = {
   "how-to-invest-in-etfs-for-beginners": EtfBeginners,
+  "what-drip-does-to-your-returns": WhatDripDoes,
+  "what-is-a-dividend": WhatIsADividend,
+  "dividend-yield-vs-dividend-growth": YieldVsGrowth,
 };
 
 const ADS_ENABLED = false;
@@ -24,6 +30,9 @@ const cardItem = { hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0, trans
 // ARTICLE_COMPONENTS below, 3) add the route to prerender.js.
 const ARTICLES = [
   { slug: "how-to-invest-in-etfs-for-beginners", title: "How to Invest in ETFs for Beginners — Dividend Forecaster" },
+  { slug: "what-drip-does-to-your-returns", title: "What DRIP Actually Does to Your Returns — Dividend Forecaster" },
+  { slug: "what-is-a-dividend", title: "What Is a Dividend? How Dividends Work — Dividend Forecaster" },
+  { slug: "dividend-yield-vs-dividend-growth", title: "Dividend Yield vs. Dividend Growth: Which Matters More? — Dividend Forecaster" },
 ];
 const PAGE_TO_PATH = { calculator: "/", learn: "/learn", methodology: "/methodology", about: "/about", contact: "/contact", privacy: "/privacy" };
 const PATH_TO_PAGE = { "/": "calculator", "/learn": "learn", "/methodology": "methodology", "/about": "about", "/contact": "contact", "/privacy": "privacy" };
@@ -1036,9 +1045,18 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
           <h1 style={{ fontSize:32, fontWeight:700, marginBottom:8, letterSpacing:"-0.02em" }}>Dividend Investing: Everything You Need to Know</h1>
           <p style={{ fontSize:12, color:t.tx3, marginBottom:16 }}>Written by Zahid Rehman · Updated June 2026</p>
           <div style={{ background:t.sf, border:`1px solid ${t.bd2}`, borderRadius:16, padding:"20px 24px", marginBottom:28 }}>
-            <div style={{ fontSize:11, fontWeight:700, color:t.tx3, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:8 }}>Guides</div>
-            <button onClick={() => navigate("article:how-to-invest-in-etfs-for-beginners")} style={{ background:"none", border:"none", padding:0, color:t.ac, fontSize:16, fontWeight:600, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>How to Invest in ETFs for Beginners</button>
-            <p style={{ fontSize:13, lineHeight:1.6, color:t.tx2, margin:"4px 0 0 0" }}>A plain-language guide to your first $5,000 — and a 30-year projection you can rerun yourself.</p>
+            <div style={{ fontSize:11, fontWeight:700, color:t.tx3, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:12 }}>Guides</div>
+            {[
+              { slug:"how-to-invest-in-etfs-for-beginners", title:"How to Invest in ETFs for Beginners", sub:"A plain-language guide to your first $5,000 — and a 30-year projection you can rerun yourself." },
+              { slug:"what-drip-does-to-your-returns", title:"What DRIP Actually Does to Your Returns", sub:"The same money, reinvestment on and off, thirty years apart in outcome." },
+              { slug:"what-is-a-dividend", title:"What Is a Dividend? How Dividends Work", sub:"Where the cash comes from, the dates that decide if you get paid, and the one-day catch." },
+              { slug:"dividend-yield-vs-dividend-growth", title:"Dividend Yield vs. Dividend Growth", sub:"Income now or income later — and when the slow starter overtakes." },
+            ].map((item, i, arr) => (
+              <div key={item.slug} style={{ marginBottom:i < arr.length - 1 ? 14 : 0 }}>
+                <button onClick={() => navigate(`article:${item.slug}`)} style={{ background:"none", border:"none", padding:0, color:t.ac, fontSize:16, fontWeight:600, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>{item.title}</button>
+                <p style={{ fontSize:13, lineHeight:1.6, color:t.tx2, margin:"4px 0 0 0" }}>{item.sub}</p>
+              </div>
+            ))}
           </div>
           <p style={{ fontSize:15, lineHeight:1.7, color:t.tx2, marginBottom:32 }}>20 concepts. Each one builds on the last. By the end, you will understand how dividend investing works — from the first dollar to financial freedom.</p>
 

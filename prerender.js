@@ -30,6 +30,9 @@ const routes = {
   '/contact':     { title: 'Contact — Dividend Forecaster', description: 'How to reach Dividend Forecaster: general questions, bug reports, feedback, partnership and press inquiries. We do not provide personalized financial advice.' },
   '/privacy':     { title: 'Privacy Policy — Dividend Forecaster', description: 'Dividend Forecaster privacy policy: no personal data collected, no accounts, no server storage. Third-party cookies via Google AdSense for ad personalization; opt-out instructions included.' },
   '/learn/how-to-invest-in-etfs-for-beginners': { title: 'How to Invest in ETFs for Beginners — Dividend Forecaster', description: 'A plain-language guide to investing your first $5,000 in ETFs: what an ETF actually is, three filters for choosing funds, how to buy, what to do after you buy — and a 30-year worked projection you can rerun with your own assumptions in the free calculator.' },
+  '/learn/what-drip-does-to-your-returns': { title: 'What DRIP Actually Does to Your Returns — Dividend Forecaster', description: 'What a DRIP (dividend reinvestment plan) actually changes: the same investment modeled with reinvestment on and off over 30 years, why the gap compounds, and when taking the cash is the smarter move.' },
+  '/learn/what-is-a-dividend': { title: 'What Is a Dividend? How Dividends Work — Dividend Forecaster', description: 'A plain-language explainer: where dividends come from, the four dates that decide whether you get paid, why the share price drops on the ex-dividend date, and what to do with the cash.' },
+  '/learn/dividend-yield-vs-dividend-growth': { title: 'Dividend Yield vs. Dividend Growth: Which Matters More? — Dividend Forecaster', description: 'High yield pays more now; fast dividend growth can overtake it decades later. A 30-year side-by-side showing when the crossover happens and which profile fits which investor.' },
 }
 
 let count = 0
