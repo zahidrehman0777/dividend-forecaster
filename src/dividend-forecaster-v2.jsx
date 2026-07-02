@@ -34,7 +34,12 @@ const ARTICLES = [
   { slug: "what-is-a-dividend", title: "What Is a Dividend? How Dividends Work — Dividend Forecaster" },
   { slug: "dividend-yield-vs-dividend-growth", title: "Dividend Yield vs. Dividend Growth: Which Matters More? — Dividend Forecaster" },
 ];
-const PAGE_TO_PATH = { calculator: "/", learn: "/learn", methodology: "/methodology", about: "/about", contact: "/contact", privacy: "/privacy" };
+// PAGE_TO_PATH values are the URLs navigate() pushes into the history. Non-root paths
+// use a trailing slash so client-side pushState matches Cloudflare's canonical URL
+// (Pages 308-redirects /foo -> /foo/). PATH_TO_PAGE keys accept both /foo and /foo/ so
+// a slash-less hit from an old link, the SSR loop (which passes slash-less routes), or
+// a stray Cloudflare edge case still resolves cleanly.
+const PAGE_TO_PATH = { calculator: "/", learn: "/learn/", methodology: "/methodology/", about: "/about/", contact: "/contact/", privacy: "/privacy/" };
 const PATH_TO_PAGE = { "/": "calculator", "/learn": "learn", "/methodology": "methodology", "/about": "about", "/contact": "contact", "/privacy": "privacy" };
 const PAGE_TITLES = {
   calculator: "Dividend Forecaster — Free Dividend Calculator",
@@ -47,9 +52,14 @@ const PAGE_TITLES = {
 for (const { slug, title } of ARTICLES) {
   const key = `article:${slug}`;
   const path = `/learn/${slug}`;
-  PAGE_TO_PATH[key] = path;
+  PAGE_TO_PATH[key] = `${path}/`;
   PATH_TO_PAGE[path] = key;
   PAGE_TITLES[key] = title;
+}
+// Register trailing-slash aliases for every non-root path so direct hits with a
+// trailing slash (Cloudflare's canonical form) resolve to the same page.
+for (const [path, key] of Object.entries({ ...PATH_TO_PAGE })) {
+  if (path !== "/" && !path.endsWith("/")) PATH_TO_PAGE[path + "/"] = key;
 }
 
 const L = { bg:"#FAFAFA", sf:"#FFF", sf2:"#F5F5F7", bd:"#E5E5EA", bd2:"#F0F0F2", tx:"#1D1D1F", tx2:"#6E6E73", tx3:"#AEAEB2",
