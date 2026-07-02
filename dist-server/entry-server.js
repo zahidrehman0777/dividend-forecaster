@@ -2373,6 +2373,14 @@ function DividendForecasterV2({ ssrPath } = {}) {
 						}),
 						/* @__PURE__ */ jsx("p", {
 							style: {
+								fontSize: 12,
+								color: t.tx3,
+								marginBottom: 16
+							},
+							children: "Written by Zahid Rehman · Updated June 2026"
+						}),
+						/* @__PURE__ */ jsx("p", {
+							style: {
 								fontSize: 15,
 								lineHeight: 1.7,
 								color: t.tx2,
@@ -3927,22 +3935,47 @@ function DividendForecasterV2({ ssrPath } = {}) {
 								})] })]
 							}, i))]
 						}),
-						/* @__PURE__ */ jsx("div", {
+						/* @__PURE__ */ jsxs("div", {
 							style: {
-								textAlign: "center",
-								padding: "32px 24px",
+								background: t.sf,
+								borderRadius: 16,
+								padding: "28px 32px",
+								border: `1px solid ${t.bd2}`,
 								marginBottom: 32
 							},
-							children: /* @__PURE__ */ jsx("div", {
+							children: [/* @__PURE__ */ jsx("h2", {
 								style: {
-									fontSize: 13,
-									lineHeight: 1.7,
-									color: t.tx2,
-									maxWidth: 600,
-									margin: "0 auto"
+									fontSize: 22,
+									fontWeight: 700,
+									marginBottom: 12
 								},
-								children: "Dividend Forecaster was built for investors who want to see the real numbers — not the optimistic version. Every feature exists because we needed it for our own dividend investing research. If a number matters, it is on the screen. If it does not, it is not."
-							})
+								children: "Who's behind this"
+							}), /* @__PURE__ */ jsxs("p", {
+								style: {
+									fontSize: 14,
+									lineHeight: 1.75,
+									color: t.tx2,
+									margin: 0
+								},
+								children: [
+									"This site is built and maintained by Zahid Rehman. I hold a BS in Accounting and Finance from the Institute of Management Sciences (IMSciences), where my research focused on seasonal anomalies in the stock market. I spend much of my time researching dividend and index-fund strategies — reading fund filings, checking distribution histories, and running long-term projections. I built the Dividend Forecaster because I wanted a calculator that was transparent about its math and grounded in real numbers, rather than a black box. Every projection here uses assumptions I'd want spelled out before trusting a forecast myself. If you spot an error or have a question, the ",
+									/* @__PURE__ */ jsx("button", {
+										onClick: () => navigate("contact"),
+										style: {
+											background: "none",
+											border: "none",
+											padding: 0,
+											color: t.ac,
+											textDecoration: "underline",
+											cursor: "pointer",
+											fontFamily: FONT,
+											fontSize: 14
+										},
+										children: "contact page"
+									}),
+									" is the best way to reach me."
+								]
+							})]
 						}),
 						/* @__PURE__ */ jsx("div", {
 							style: { textAlign: "center" },

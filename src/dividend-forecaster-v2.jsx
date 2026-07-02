@@ -1015,6 +1015,7 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
       {page === "learn" ? (
         <motion.div key="learn" {...pageT} style={{ maxWidth:800, margin:"0 auto", padding:"48px 24px 60px" }}>
           <h1 style={{ fontSize:32, fontWeight:700, marginBottom:8, letterSpacing:"-0.02em" }}>Dividend Investing: Everything You Need to Know</h1>
+          <p style={{ fontSize:12, color:t.tx3, marginBottom:16 }}>Written by Zahid Rehman · Updated June 2026</p>
           <p style={{ fontSize:15, lineHeight:1.7, color:t.tx2, marginBottom:32 }}>20 concepts. Each one builds on the last. By the end, you will understand how dividend investing works — from the first dollar to financial freedom.</p>
 
           <div style={{ background:t.sf, borderRadius:16, padding:"24px 28px", border:`1px solid ${t.bd2}`, marginBottom:28 }}>
@@ -1479,9 +1480,10 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
             ))}
           </div>
 
-          {/* Who built this */}
-          <div style={{ textAlign:"center", padding:"32px 24px", marginBottom:32 }}>
-            <div style={{ fontSize:13, lineHeight:1.7, color:t.tx2, maxWidth:600, margin:"0 auto" }}>Dividend Forecaster was built for investors who want to see the real numbers — not the optimistic version. Every feature exists because we needed it for our own dividend investing research. If a number matters, it is on the screen. If it does not, it is not.</div>
+          {/* Who's behind this */}
+          <div style={{ background:t.sf, borderRadius:16, padding:"28px 32px", border:`1px solid ${t.bd2}`, marginBottom:32 }}>
+            <h2 style={{ fontSize:22, fontWeight:700, marginBottom:12 }}>Who's behind this</h2>
+            <p style={{ fontSize:14, lineHeight:1.75, color:t.tx2, margin:0 }}>This site is built and maintained by Zahid Rehman. I hold a BS in Accounting and Finance from the Institute of Management Sciences (IMSciences), where my research focused on seasonal anomalies in the stock market. I spend much of my time researching dividend and index-fund strategies — reading fund filings, checking distribution histories, and running long-term projections. I built the Dividend Forecaster because I wanted a calculator that was transparent about its math and grounded in real numbers, rather than a black box. Every projection here uses assumptions I'd want spelled out before trusting a forecast myself. If you spot an error or have a question, the <button onClick={() => navigate("contact")} style={{ background:"none", border:"none", padding:0, color:t.ac, textDecoration:"underline", cursor:"pointer", fontFamily:FONT, fontSize:14 }}>contact page</button> is the best way to reach me.</p>
           </div>
 
           <div style={{ textAlign:"center" }}>
