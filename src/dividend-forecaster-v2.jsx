@@ -5,6 +5,8 @@ import EtfBeginners from "./articles/EtfBeginners.jsx";
 import WhatDripDoes from "./articles/WhatDripDoes.jsx";
 import WhatIsADividend from "./articles/WhatIsADividend.jsx";
 import YieldVsGrowth from "./articles/YieldVsGrowth.jsx";
+import FidelityVsSchwab from "./articles/FidelityVsSchwab.jsx";
+import HowDividendsAreTaxed from "./articles/HowDividendsAreTaxed.jsx";
 
 // Article slug → component. Add here when scaffolding a new article.
 const ARTICLE_COMPONENTS = {
@@ -12,6 +14,8 @@ const ARTICLE_COMPONENTS = {
   "what-drip-does-to-your-returns": WhatDripDoes,
   "what-is-a-dividend": WhatIsADividend,
   "dividend-yield-vs-dividend-growth": YieldVsGrowth,
+  "fidelity-vs-schwab-index-funds": FidelityVsSchwab,
+  "how-dividends-are-taxed": HowDividendsAreTaxed,
 };
 
 const ADS_ENABLED = false;
@@ -33,6 +37,8 @@ const ARTICLES = [
   { slug: "what-drip-does-to-your-returns", title: "What DRIP Actually Does to Your Returns — Dividend Forecaster" },
   { slug: "what-is-a-dividend", title: "What Is a Dividend? How Dividends Work — Dividend Forecaster" },
   { slug: "dividend-yield-vs-dividend-growth", title: "Dividend Yield vs. Dividend Growth: Which Matters More? — Dividend Forecaster" },
+  { slug: "fidelity-vs-schwab-index-funds", title: "Fidelity vs. Schwab Index Funds: Which Is Actually Better? — Dividend Forecaster" },
+  { slug: "how-dividends-are-taxed", title: "How Dividends Are Taxed (and What DRIP Does to the Bill) — Dividend Forecaster" },
 ];
 // PAGE_TO_PATH values are the URLs navigate() pushes into the history. Non-root paths
 // use a trailing slash so client-side pushState matches Cloudflare's canonical URL
@@ -1061,6 +1067,8 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
               { slug:"what-drip-does-to-your-returns", title:"What DRIP Actually Does to Your Returns", sub:"The same money, reinvestment on and off, thirty years apart in outcome." },
               { slug:"what-is-a-dividend", title:"What Is a Dividend? How Dividends Work", sub:"Where the cash comes from, the dates that decide if you get paid, and the one-day catch." },
               { slug:"dividend-yield-vs-dividend-growth", title:"Dividend Yield vs. Dividend Growth", sub:"Income now or income later — and when the slow starter overtakes." },
+              { slug:"fidelity-vs-schwab-index-funds", title:"Fidelity vs. Schwab Index Funds", sub:"Near-identical funds, one real difference — and what the fee gap actually costs over 30 years." },
+              { slug:"how-dividends-are-taxed", title:"How Dividends Are Taxed", sub:"The account matters more than the rate: qualified vs. ordinary, the 0% bracket, and the reinvestment surprise." },
             ].map((item, i, arr) => (
               <div key={item.slug} style={{ marginBottom:i < arr.length - 1 ? 14 : 0 }}>
                 <button onClick={() => navigate(`article:${item.slug}`)} style={{ background:"none", border:"none", padding:0, color:t.ac, fontSize:16, fontWeight:600, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>{item.title}</button>

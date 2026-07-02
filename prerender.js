@@ -33,6 +33,8 @@ const routes = {
   '/learn/what-drip-does-to-your-returns': { title: 'What DRIP Actually Does to Your Returns — Dividend Forecaster', description: 'What a DRIP (dividend reinvestment plan) actually changes: the same investment modeled with reinvestment on and off over 30 years, why the gap compounds, and when taking the cash is the smarter move.' },
   '/learn/what-is-a-dividend': { title: 'What Is a Dividend? How Dividends Work — Dividend Forecaster', description: 'A plain-language explainer: where dividends come from, the four dates that decide whether you get paid, why the share price drops on the ex-dividend date, and what to do with the cash.' },
   '/learn/dividend-yield-vs-dividend-growth': { title: 'Dividend Yield vs. Dividend Growth: Which Matters More? — Dividend Forecaster', description: 'High yield pays more now; fast dividend growth can overtake it decades later. A 30-year side-by-side showing when the crossover happens and which profile fits which investor.' },
+  '/learn/fidelity-vs-schwab-index-funds': { title: 'Fidelity vs. Schwab Index Funds: Which Is Actually Better? — Dividend Forecaster', description: 'Fidelity and Schwab index funds tracking the same index are near-twins. What actually separates them: expense ratios, the Fidelity ZERO transfer catch, and which brokerage you already use — with a 30-year fee-gap demonstration.' },
+  '/learn/how-dividends-are-taxed': { title: 'How Dividends Are Taxed (and What DRIP Does to the Bill) — Dividend Forecaster', description: 'How dividend taxes actually work: why the account type matters most, qualified vs. ordinary dividends, the 0% bracket many investors miss, the DRIP tax surprise, and how to model your own rates in the calculator.' },
 }
 
 let count = 0
