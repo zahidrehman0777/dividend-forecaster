@@ -319,8 +319,13 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
   const [isClient, setIsClient] = useState(false);
   useEffect(() => { setIsClient(true); }, []);
   const [page, setPage] = useState(() => {
-    if (typeof window === "undefined") return PATH_TO_PAGE[ssrPath] || "calculator";
-    return PATH_TO_PAGE[window.location.pathname] || "calculator";
+    // Root resolves to calculator; unknown paths become "notfound" (no more soft-404s).
+    if (typeof window === "undefined") {
+      if (ssrPath === "/") return "calculator";
+      return PATH_TO_PAGE[ssrPath] || "notfound";
+    }
+    if (window.location.pathname === "/") return "calculator";
+    return PATH_TO_PAGE[window.location.pathname] || "notfound";
   });
   const navigate = useCallback((newPage) => {
     setPage(newPage);
@@ -331,7 +336,8 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
   }, []);
   useEffect(() => {
     const handlePopState = () => {
-      const newPage = PATH_TO_PAGE[window.location.pathname] || "calculator";
+      const path = window.location.pathname;
+      const newPage = path === "/" ? "calculator" : (PATH_TO_PAGE[path] || "notfound");
       setPage(newPage);
     };
     window.addEventListener("popstate", handlePopState);
@@ -1061,21 +1067,21 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
       {/* Header */}
       <div style={{ borderBottom:`1px solid ${t.bd}`, background:t.hd, backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", position:"sticky", top:0, zIndex:100 }}>
         <div style={{ maxWidth:1200, margin:"0 auto", padding:"14px 24px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
-          <div style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer" }} onClick={() => navigate("calculator")}>
+          <a href="/" onClick={e => { e.preventDefault(); navigate("calculator"); }} style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer", textDecoration:"none", color:"inherit" }}>
             <div style={{ width:32, height:32, borderRadius:9, background:`linear-gradient(135deg, ${t.ac}, ${t.pu})`, display:"flex", alignItems:"center", justifyContent:"center", color:"#FFF", fontWeight:700, fontSize:14 }}>DF</div>
             <div>
               <div style={{ fontSize:16, fontWeight:600, letterSpacing:"-0.01em" }}>Dividend Forecaster</div>
               <div style={{ fontSize:10, color:t.tx3, letterSpacing:"0.02em" }}>Project dividend income, compare funds, plan your freedom date</div>
             </div>
-          </div>
+          </a>
           <div style={{ display:"flex", alignItems:"center", gap:6 }}>
             <div style={{ display:"flex", gap:2 }}>
               {[{id:"calculator",l:"Calculator"},{id:"methodology",l:"How It Works"},{id:"learn",l:"Learn"},{id:"about",l:"About"}].map(p => (
-                <button key={p.id} onClick={() => navigate(p.id)} style={{
-                  padding:"7px 14px", borderRadius:8, border:"none", fontSize:12, fontWeight:page===p.id?600:400,
-                  background:page===p.id?t.sf:"transparent", color:page===p.id?t.tx:t.tx3,
+                <a key={p.id} href={PAGE_TO_PATH[p.id]} onClick={e => { e.preventDefault(); navigate(p.id); }} style={{
+                  display:"inline-block", padding:"7px 14px", borderRadius:8, border:"none", fontSize:12, fontWeight:page===p.id?600:400,
+                  background:page===p.id?t.sf:"transparent", color:page===p.id?t.tx:t.tx3, textDecoration:"none",
                   cursor:"pointer", fontFamily:FONT, boxShadow:page===p.id?"0 1px 4px rgba(0,0,0,0.08)":"none", transition:"all 0.2s"
-                }}>{p.l}</button>
+                }}>{p.l}</a>
               ))}
             </div>
             <button onClick={() => setDark(!dark)} style={{ width:36, height:36, borderRadius:18, border:`1.5px solid ${t.bd}`, background:t.sf, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:t.tx2, transition:"all 0.2s", fontSize:16 }}>
@@ -1739,6 +1745,15 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
           const ArticleComponent = ARTICLE_COMPONENTS[page.slice("article:".length)];
           return <ArticleComponent t={t} navigate={navigate} />;
         })()
+      ) : page === "notfound" ? (
+        <motion.div key="notfound" {...pageT} style={{ maxWidth:800, margin:"0 auto", padding:"80px 24px 60px", textAlign:"center" }}>
+          <h1 style={{ fontSize:32, fontWeight:700, marginBottom:12, letterSpacing:"-0.02em" }}>Page not found</h1>
+          <p style={{ fontSize:15, lineHeight:1.7, color:t.tx2, marginBottom:32 }}>That page doesn't exist — it may have moved.</p>
+          <div style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
+            <a href="/" onClick={e => { e.preventDefault(); navigate("calculator"); }} style={{ display:"inline-block", padding:"12px 24px", borderRadius:12, background:t.ac, color:"#FFF", fontSize:15, fontWeight:600, textDecoration:"none", fontFamily:FONT }}>Open the Calculator</a>
+            <a href="/learn/" onClick={e => { e.preventDefault(); navigate("learn"); }} style={{ display:"inline-block", padding:"12px 24px", borderRadius:12, border:`1.5px solid ${t.bd}`, background:t.sf, color:t.tx, fontSize:15, fontWeight:600, textDecoration:"none", fontFamily:FONT }}>Browse the guides</a>
+          </div>
+        </motion.div>
       ) : (
         /* ===== CALCULATOR PAGE ===== */
         <motion.div key="calculator" {...pageT}>
@@ -2984,18 +2999,18 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
               <div style={{ fontSize:11, fontWeight:700, color:t.tx2, textTransform:"uppercase", letterSpacing:"0.05em", marginBottom:10 }}>Tools</div>
               <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
                 {[{l:"Projection Calculator",m:"projection"},{l:"Live Off Dividends",m:"liveoff"},{l:"Goal Tracker",m:"goal"},{l:"Compare Funds",m:"compare"},{l:"CAGR Calculator",m:"cagr"}].map(item => (
-                  <button key={item.m} onClick={() => { navigate("calculator"); setMode(item.m); }} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>{item.l}</button>
+                  <a key={item.m} href="/" onClick={e => { e.preventDefault(); navigate("calculator"); setMode(item.m); }} style={{ color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left", textDecoration:"none" }}>{item.l}</a>
                 ))}
               </div>
             </div>
             <div style={{ flex:"0 0 auto" }}>
               <div style={{ fontSize:11, fontWeight:700, color:t.tx2, textTransform:"uppercase", letterSpacing:"0.05em", marginBottom:10 }}>Resources</div>
               <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-                <button onClick={() => navigate("methodology")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>How It Works</button>
-                <button onClick={() => navigate("learn")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Learn Dividend Investing</button>
-                <button onClick={() => navigate("about")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>About</button>
-                <button onClick={() => navigate("contact")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Contact</button>
-                <button onClick={() => navigate("privacy")} style={{ background:"none", border:"none", padding:0, color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left" }}>Privacy Policy</button>
+                <a href="/methodology/" onClick={e => { e.preventDefault(); navigate("methodology"); }} style={{ color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left", textDecoration:"none" }}>How It Works</a>
+                <a href="/learn/" onClick={e => { e.preventDefault(); navigate("learn"); }} style={{ color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left", textDecoration:"none" }}>Learn Dividend Investing</a>
+                <a href="/about/" onClick={e => { e.preventDefault(); navigate("about"); }} style={{ color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left", textDecoration:"none" }}>About</a>
+                <a href="/contact/" onClick={e => { e.preventDefault(); navigate("contact"); }} style={{ color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left", textDecoration:"none" }}>Contact</a>
+                <a href="/privacy/" onClick={e => { e.preventDefault(); navigate("privacy"); }} style={{ color:t.tx3, fontSize:12, cursor:"pointer", fontFamily:FONT, textAlign:"left", textDecoration:"none" }}>Privacy Policy</a>
               </div>
             </div>
           </div>

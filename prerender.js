@@ -45,6 +45,9 @@ const routes = {
   '/learn/lump-sum-vs-monthly-investing': { title: 'Lump Sum vs. Monthly Investing: Which Builds More? — Dividend Forecaster', description: 'Investing $12,000 today beats spreading it over a year by about 4.5% in a steady-growth model — and the model is rigged in lump sum\'s favor. The honest math, the crash case, and why waiting in cash loses to both.' },
   '/learn/what-one-dollar-a-day-builds': { title: 'What $1 a Day Actually Builds (and What It Doesn\'t) — Dividend Forecaster', description: 'One dollar a day, invested and reinvested for 30 years, builds about $67,000 and $3,100 a year of dividend income — real, and nothing like the million-dollar claims. The honest table from $1 to $10 a day.' },
   '/learn/living-off-dividends-vs-selling-shares': { title: 'Living Off Dividends vs. Selling Shares in Retirement — Dividend Forecaster', description: 'Two ways to turn a portfolio into retirement income: spend the dividends, or sell shares under the 4% rule. What Bengen\'s research actually said, where each approach breaks, and the hybrid most retirees land on.' },
+  // /404 is served by Cloudflare Pages with a real 404 status when no file matches;
+  // it renders the notfound page and is excluded from the sitemap.
+  '/404':         { title: 'Page Not Found — Dividend Forecaster', description: 'The page you were looking for could not be found.' },
 }
 
 let count = 0
@@ -64,10 +67,27 @@ for (const [route, meta] of Object.entries(routes)) {
   html = html.replace(/(<meta property="twitter:url" content=")[\s\S]*?(" \/>)/, `$1${canonical}$2`)
   html = html.replace(/(<meta property="twitter:title" content=")[\s\S]*?(" \/>)/, `$1${meta.title}$2`)
   html = html.replace(/(<meta property="twitter:description" content=")[\s\S]*?(" \/>)/, `$1${meta.description}$2`)
-  const outPath = route === '/' ? 'dist/index.html' : `dist${route}/index.html`
+  // /404 → dist/404.html (Cloudflare Pages serves this with a real 404 status).
+  // Everything else → dist/<route>/index.html.
+  const outPath = route === '/' ? 'dist/index.html'
+    : route === '/404' ? 'dist/404.html'
+    : `dist${route}/index.html`
   fs.mkdirSync(path.dirname(abs(outPath)), { recursive: true })
   fs.writeFileSync(abs(outPath), html)
   console.log('pre-rendered', outPath)
   count++
 }
 console.log(`\n✓ wrote ${count} pre-rendered HTML files`)
+
+// sitemap.xml — derived from the same routes object; /404 is excluded.
+const today = new Date().toISOString().slice(0, 10)
+const sitemapUrls = Object.keys(routes)
+  .filter(r => r !== '/404')
+  .map(r => SITE + (r === '/' ? '/' : `${r}/`))
+const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapUrls.map(u => `  <url>\n    <loc>${u}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`).join('\n')}
+</urlset>
+`
+fs.writeFileSync(abs('dist/sitemap.xml'), sitemapXml)
+console.log(`sitemap.xml written with ${sitemapUrls.length} URLs`)
