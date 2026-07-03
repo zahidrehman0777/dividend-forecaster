@@ -7,6 +7,9 @@ import WhatIsADividend from "./articles/WhatIsADividend.jsx";
 import YieldVsGrowth from "./articles/YieldVsGrowth.jsx";
 import FidelityVsSchwab from "./articles/FidelityVsSchwab.jsx";
 import HowDividendsAreTaxed from "./articles/HowDividendsAreTaxed.jsx";
+import LiveOffDividends from "./articles/LiveOffDividends.jsx";
+import YieldTraps from "./articles/YieldTraps.jsx";
+import AristocratsKings from "./articles/AristocratsKings.jsx";
 
 // Article slug → component. Add here when scaffolding a new article.
 const ARTICLE_COMPONENTS = {
@@ -16,6 +19,9 @@ const ARTICLE_COMPONENTS = {
   "dividend-yield-vs-dividend-growth": YieldVsGrowth,
   "fidelity-vs-schwab-index-funds": FidelityVsSchwab,
   "how-dividends-are-taxed": HowDividendsAreTaxed,
+  "how-much-to-live-off-dividends": LiveOffDividends,
+  "dividend-yield-traps": YieldTraps,
+  "dividend-aristocrats-and-kings": AristocratsKings,
 };
 
 const ADS_ENABLED = false;
@@ -39,6 +45,9 @@ const ARTICLES = [
   { slug: "dividend-yield-vs-dividend-growth", title: "Dividend Yield vs. Dividend Growth: Which Matters More? — Dividend Forecaster" },
   { slug: "fidelity-vs-schwab-index-funds", title: "Fidelity vs. Schwab Index Funds: Which Is Actually Better? — Dividend Forecaster" },
   { slug: "how-dividends-are-taxed", title: "How Dividends Are Taxed (and What DRIP Does to the Bill) — Dividend Forecaster" },
+  { slug: "how-much-to-live-off-dividends", title: "How Much Do You Need to Live Off Dividends? — Dividend Forecaster" },
+  { slug: "dividend-yield-traps", title: "Is a High Dividend Yield Good? Yield Traps Explained — Dividend Forecaster" },
+  { slug: "dividend-aristocrats-and-kings", title: "Dividend Aristocrats and Kings, Explained — Dividend Forecaster" },
 ];
 // PAGE_TO_PATH values are the URLs navigate() pushes into the history. Non-root paths
 // use a trailing slash so client-side pushState matches Cloudflare's canonical URL
@@ -1071,6 +1080,9 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
               { slug:"what-drip-does-to-your-returns", title:"What DRIP Actually Does to Your Returns", sub:"The same money, reinvestment on and off, thirty years apart in outcome." },
               { slug:"how-dividends-are-taxed", title:"How Dividends Are Taxed", sub:"The account matters more than the rate: qualified vs. ordinary, the 0% bracket, and the reinvestment surprise." },
               { slug:"fidelity-vs-schwab-index-funds", title:"Fidelity vs. Schwab Index Funds", sub:"Near-identical funds, one real difference — and what the fee gap actually costs over 30 years." },
+              { slug:"how-much-to-live-off-dividends", title:"How Much Do You Need to Live Off Dividends?", sub:"The portfolio your expenses require, a freedom-date projection, and why the target moves." },
+              { slug:"dividend-yield-traps", title:"Is a High Dividend Yield Good? Yield Traps", sub:"When a big yield is a warning sign, and the 15-year cost of chasing one." },
+              { slug:"dividend-aristocrats-and-kings", title:"Dividend Aristocrats and Kings, Explained", sub:"What 25- and 50-year raise streaks prove — and what they don't." },
             ].map(item => (
               <div key={item.slug} style={{ background:t.sf, border:`1px solid ${t.bd2}`, borderRadius:14, padding:"16px 20px" }}>
                 <a href={`/learn/${item.slug}/`} onClick={e => { e.preventDefault(); navigate(`article:${item.slug}`); }} style={{ color:t.ac, fontSize:16, fontWeight:600, textDecoration:"none", fontFamily:FONT }}>{item.title}</a>
