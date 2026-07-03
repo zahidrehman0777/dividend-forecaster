@@ -41,6 +41,8 @@ const routes = {
   '/learn/how-much-to-invest-for-500-a-month': { title: 'How Much Do You Need to Invest for $500 a Month in Dividends? — Dividend Forecaster', description: '$500 a month in dividends takes about $171,000 at a 3.5% yield — or a $500 monthly contribution and thirteen years. Both paths, with the tables, and why builders cross the line early.' },
   '/learn/how-to-tell-if-a-dividend-is-safe': { title: 'How to Tell If a Dividend Is Safe — Dividend Forecaster', description: 'Five checks that catch most dividend cuts before they happen: payout ratio bands, the price-versus-payout warning, growth history, sector context, and what a 25-year streak does and doesn\'t prove.' },
   '/learn/monthly-vs-quarterly-dividends': { title: 'Monthly vs. Quarterly Dividends: Does Payout Frequency Matter? — Dividend Forecaster', description: 'Monthly payers compound slightly faster than quarterly — worth 0.47% over 30 years in a like-for-like test. What frequency actually changes, and the hidden cost of choosing funds by payday.' },
+  '/learn/what-a-market-crash-does-to-dividends': { title: 'What a Market Crash Actually Does to Dividend Income — Dividend Forecaster', description: 'In 2008 the S&P 500 fell about 55% while its dividends fell 24% — the worst income hit since 1948. What crashes historically do to dividend income, why the screen lies, and where the real risks hide.' },
+  '/learn/lump-sum-vs-monthly-investing': { title: 'Lump Sum vs. Monthly Investing: Which Builds More? — Dividend Forecaster', description: 'Investing $12,000 today beats spreading it over a year by about 4.5% in a steady-growth model — and the model is rigged in lump sum\'s favor. The honest math, the crash case, and why waiting in cash loses to both.' },
 }
 
 let count = 0

@@ -13,6 +13,8 @@ import AristocratsKings from "./articles/AristocratsKings.jsx";
 import FiveHundredAMonth from "./articles/FiveHundredAMonth.jsx";
 import DividendSafety from "./articles/DividendSafety.jsx";
 import PayoutFrequency from "./articles/PayoutFrequency.jsx";
+import MarketCrashDividends from "./articles/MarketCrashDividends.jsx";
+import LumpSumVsMonthly from "./articles/LumpSumVsMonthly.jsx";
 
 // Article slug → component. Add here when scaffolding a new article.
 const ARTICLE_COMPONENTS = {
@@ -28,6 +30,8 @@ const ARTICLE_COMPONENTS = {
   "how-much-to-invest-for-500-a-month": FiveHundredAMonth,
   "how-to-tell-if-a-dividend-is-safe": DividendSafety,
   "monthly-vs-quarterly-dividends": PayoutFrequency,
+  "what-a-market-crash-does-to-dividends": MarketCrashDividends,
+  "lump-sum-vs-monthly-investing": LumpSumVsMonthly,
 };
 
 const ADS_ENABLED = false;
@@ -57,6 +61,8 @@ const ARTICLES = [
   { slug: "how-much-to-invest-for-500-a-month", title: "How Much Do You Need to Invest for $500 a Month in Dividends? — Dividend Forecaster" },
   { slug: "how-to-tell-if-a-dividend-is-safe", title: "How to Tell If a Dividend Is Safe — Dividend Forecaster" },
   { slug: "monthly-vs-quarterly-dividends", title: "Monthly vs. Quarterly Dividends: Does Payout Frequency Matter? — Dividend Forecaster" },
+  { slug: "what-a-market-crash-does-to-dividends", title: "What a Market Crash Actually Does to Dividend Income — Dividend Forecaster" },
+  { slug: "lump-sum-vs-monthly-investing", title: "Lump Sum vs. Monthly Investing: Which Builds More? — Dividend Forecaster" },
 ];
 // PAGE_TO_PATH values are the URLs navigate() pushes into the history. Non-root paths
 // use a trailing slash so client-side pushState matches Cloudflare's canonical URL
@@ -1095,6 +1101,8 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
               { slug:"how-much-to-invest-for-500-a-month", title:"How Much to Invest for $500 a Month", sub:"The lump-sum answer, the build-toward answer, and why builders cross the line early." },
               { slug:"how-to-tell-if-a-dividend-is-safe", title:"How to Tell If a Dividend Is Safe", sub:"Five checks that catch most cuts before the announcement." },
               { slug:"monthly-vs-quarterly-dividends", title:"Monthly vs. Quarterly Dividends", sub:"What payout frequency actually changes — measured, not assumed." },
+              { slug:"what-a-market-crash-does-to-dividends", title:"What a Market Crash Does to Dividend Income", sub:"Prices fell 55% in 2008. Dividends fell 24%. Both halves of that sentence matter." },
+              { slug:"lump-sum-vs-monthly-investing", title:"Lump Sum vs. Monthly Investing", sub:"The measured gap, the model's bias, and the one strategy that loses to both." },
             ].map(item => (
               <div key={item.slug} style={{ background:t.sf, border:`1px solid ${t.bd2}`, borderRadius:14, padding:"16px 20px" }}>
                 <a href={`/learn/${item.slug}/`} onClick={e => { e.preventDefault(); navigate(`article:${item.slug}`); }} style={{ color:t.ac, fontSize:16, fontWeight:600, textDecoration:"none", fontFamily:FONT }}>{item.title}</a>
