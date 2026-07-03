@@ -84,6 +84,7 @@ const PAGE_TITLES = {
   about: "About — Dividend Forecaster",
   contact: "Contact — Dividend Forecaster",
   privacy: "Privacy Policy — Dividend Forecaster",
+  notfound: "Page Not Found — Dividend Forecaster",
 };
 for (const { slug, title } of ARTICLES) {
   const key = `article:${slug}`;
