@@ -1100,28 +1100,43 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
           <p style={{ fontSize:15, lineHeight:1.7, color:t.tx2, marginBottom:24 }}>Start with the guides — six in-depth articles that walk through the big decisions. Below them, quick definitions for every concept and every number the calculator shows.</p>
 
           <div style={{ fontSize:11, fontWeight:700, color:t.tx3, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:12 }}>Guides</div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(240px, 1fr))", gap:12, marginBottom:36 }}>
+          <div style={{ marginBottom:36 }}>
             {[
-              { slug:"how-to-invest-in-etfs-for-beginners", title:"How to Invest in ETFs for Beginners", sub:"A plain-language guide to your first $5,000 — and a 30-year projection you can rerun yourself." },
-              { slug:"what-is-a-dividend", title:"What Is a Dividend? How Dividends Work", sub:"Where the cash comes from, the dates that decide if you get paid, and the one-day catch." },
-              { slug:"dividend-yield-vs-dividend-growth", title:"Dividend Yield vs. Dividend Growth", sub:"Income now or income later — and when the slow starter overtakes." },
-              { slug:"what-drip-does-to-your-returns", title:"What DRIP Actually Does to Your Returns", sub:"The same money, reinvestment on and off, thirty years apart in outcome." },
-              { slug:"how-dividends-are-taxed", title:"How Dividends Are Taxed", sub:"The account matters more than the rate: qualified vs. ordinary, the 0% bracket, and the reinvestment surprise." },
-              { slug:"fidelity-vs-schwab-index-funds", title:"Fidelity vs. Schwab Index Funds", sub:"Near-identical funds, one real difference — and what the fee gap actually costs over 30 years." },
-              { slug:"how-much-to-live-off-dividends", title:"How Much Do You Need to Live Off Dividends?", sub:"The portfolio your expenses require, a freedom-date projection, and why the target moves." },
-              { slug:"dividend-yield-traps", title:"Is a High Dividend Yield Good? Yield Traps", sub:"When a big yield is a warning sign, and the 15-year cost of chasing one." },
-              { slug:"dividend-aristocrats-and-kings", title:"Dividend Aristocrats and Kings, Explained", sub:"What 25- and 50-year raise streaks prove — and what they don't." },
-              { slug:"how-much-to-invest-for-500-a-month", title:"How Much to Invest for $500 a Month", sub:"The lump-sum answer, the build-toward answer, and why builders cross the line early." },
-              { slug:"how-to-tell-if-a-dividend-is-safe", title:"How to Tell If a Dividend Is Safe", sub:"Five checks that catch most cuts before the announcement." },
-              { slug:"monthly-vs-quarterly-dividends", title:"Monthly vs. Quarterly Dividends", sub:"What payout frequency actually changes — measured, not assumed." },
-              { slug:"what-a-market-crash-does-to-dividends", title:"What a Market Crash Does to Dividend Income", sub:"Prices fell 55% in 2008. Dividends fell 24%. Both halves of that sentence matter." },
-              { slug:"lump-sum-vs-monthly-investing", title:"Lump Sum vs. Monthly Investing", sub:"The measured gap, the model's bias, and the one strategy that loses to both." },
-              { slug:"what-one-dollar-a-day-builds", title:"What $1 a Day Actually Builds", sub:"The honest 30-year number — and why the million-dollar version is a rate trick." },
-              { slug:"living-off-dividends-vs-selling-shares", title:"Living Off Dividends vs. Selling Shares", sub:"Natural yield or the 4% rule — where each one breaks, and the hybrid in between." },
-            ].map(item => (
-              <div key={item.slug} style={{ background:t.sf, border:`1px solid ${t.bd2}`, borderRadius:14, padding:"16px 20px" }}>
-                <a href={`/learn/${item.slug}/`} onClick={e => { e.preventDefault(); navigate(`article:${item.slug}`); }} style={{ color:t.ac, fontSize:16, fontWeight:600, textDecoration:"none", fontFamily:FONT }}>{item.title}</a>
-                <p style={{ fontSize:13, lineHeight:1.6, color:t.tx2, margin:"4px 0 0 0" }}>{item.sub}</p>
+              { heading:"START HERE", items:[
+                { slug:"what-is-a-dividend", title:"What Is a Dividend? How Dividends Work", sub:"Where the cash comes from, the dates that decide if you get paid, and the one-day catch." },
+                { slug:"how-to-invest-in-etfs-for-beginners", title:"How to Invest in ETFs for Beginners", sub:"A plain-language guide to your first $5,000 — and a 30-year projection you can rerun yourself." },
+                { slug:"what-drip-does-to-your-returns", title:"What DRIP Actually Does to Your Returns", sub:"The same money, reinvestment on and off, thirty years apart in outcome." },
+                { slug:"what-one-dollar-a-day-builds", title:"What $1 a Day Actually Builds", sub:"The honest 30-year number — and why the million-dollar version is a rate trick." },
+              ]},
+              { heading:"GROW THE PILE", items:[
+                { slug:"dividend-yield-vs-dividend-growth", title:"Dividend Yield vs. Dividend Growth", sub:"Income now or income later — and when the slow starter overtakes." },
+                { slug:"lump-sum-vs-monthly-investing", title:"Lump Sum vs. Monthly Investing", sub:"The measured gap, the model's bias, and the one strategy that loses to both." },
+                { slug:"monthly-vs-quarterly-dividends", title:"Monthly vs. Quarterly Dividends", sub:"What payout frequency actually changes — measured, not assumed." },
+                { slug:"how-much-to-invest-for-500-a-month", title:"How Much to Invest for $500 a Month", sub:"The lump-sum answer, the build-toward answer, and why builders cross the line early." },
+              ]},
+              { heading:"CHOOSE SAFELY", items:[
+                { slug:"how-to-tell-if-a-dividend-is-safe", title:"How to Tell If a Dividend Is Safe", sub:"Five checks that catch most cuts before the announcement." },
+                { slug:"dividend-yield-traps", title:"Is a High Dividend Yield Good? Yield Traps", sub:"When a big yield is a warning sign, and the 15-year cost of chasing one." },
+                { slug:"dividend-aristocrats-and-kings", title:"Dividend Aristocrats and Kings, Explained", sub:"What 25- and 50-year raise streaks prove — and what they don't." },
+                { slug:"fidelity-vs-schwab-index-funds", title:"Fidelity vs. Schwab Index Funds", sub:"Near-identical funds, one real difference — and what the fee gap actually costs over 30 years." },
+              ]},
+              { heading:"LIVE OFF IT", items:[
+                { slug:"how-much-to-live-off-dividends", title:"How Much Do You Need to Live Off Dividends?", sub:"The portfolio your expenses require, a freedom-date projection, and why the target moves." },
+                { slug:"living-off-dividends-vs-selling-shares", title:"Living Off Dividends vs. Selling Shares", sub:"Natural yield or the 4% rule — where each one breaks, and the hybrid in between." },
+                { slug:"what-a-market-crash-does-to-dividends", title:"What a Market Crash Does to Dividend Income", sub:"Prices fell 55% in 2008. Dividends fell 24%. Both halves of that sentence matter." },
+                { slug:"how-dividends-are-taxed", title:"How Dividends Are Taxed", sub:"The account matters more than the rate: qualified vs. ordinary, the 0% bracket, and the reinvestment surprise." },
+              ]},
+            ].map((cat, ci) => (
+              <div key={cat.heading}>
+                <div style={{ fontSize:13, fontWeight:700, color:t.tx3, letterSpacing:"0.06em", textTransform:"uppercase", marginTop:ci===0?0:22, marginBottom:10 }}>{cat.heading}</div>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(240px, 1fr))", gap:12 }}>
+                  {cat.items.map(item => (
+                    <div key={item.slug} style={{ background:t.sf, border:`1px solid ${t.bd2}`, borderRadius:14, padding:"16px 20px" }}>
+                      <a href={`/learn/${item.slug}/`} onClick={e => { e.preventDefault(); navigate(`article:${item.slug}`); }} style={{ color:t.ac, fontSize:16, fontWeight:600, textDecoration:"none", fontFamily:FONT }}>{item.title}</a>
+                      <p style={{ fontSize:13, lineHeight:1.6, color:t.tx2, margin:"4px 0 0 0" }}>{item.sub}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
