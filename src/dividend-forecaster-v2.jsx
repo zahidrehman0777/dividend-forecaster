@@ -10,6 +10,9 @@ import HowDividendsAreTaxed from "./articles/HowDividendsAreTaxed.jsx";
 import LiveOffDividends from "./articles/LiveOffDividends.jsx";
 import YieldTraps from "./articles/YieldTraps.jsx";
 import AristocratsKings from "./articles/AristocratsKings.jsx";
+import FiveHundredAMonth from "./articles/FiveHundredAMonth.jsx";
+import DividendSafety from "./articles/DividendSafety.jsx";
+import PayoutFrequency from "./articles/PayoutFrequency.jsx";
 
 // Article slug → component. Add here when scaffolding a new article.
 const ARTICLE_COMPONENTS = {
@@ -22,6 +25,9 @@ const ARTICLE_COMPONENTS = {
   "how-much-to-live-off-dividends": LiveOffDividends,
   "dividend-yield-traps": YieldTraps,
   "dividend-aristocrats-and-kings": AristocratsKings,
+  "how-much-to-invest-for-500-a-month": FiveHundredAMonth,
+  "how-to-tell-if-a-dividend-is-safe": DividendSafety,
+  "monthly-vs-quarterly-dividends": PayoutFrequency,
 };
 
 const ADS_ENABLED = false;
@@ -48,6 +54,9 @@ const ARTICLES = [
   { slug: "how-much-to-live-off-dividends", title: "How Much Do You Need to Live Off Dividends? — Dividend Forecaster" },
   { slug: "dividend-yield-traps", title: "Is a High Dividend Yield Good? Yield Traps Explained — Dividend Forecaster" },
   { slug: "dividend-aristocrats-and-kings", title: "Dividend Aristocrats and Kings, Explained — Dividend Forecaster" },
+  { slug: "how-much-to-invest-for-500-a-month", title: "How Much Do You Need to Invest for $500 a Month in Dividends? — Dividend Forecaster" },
+  { slug: "how-to-tell-if-a-dividend-is-safe", title: "How to Tell If a Dividend Is Safe — Dividend Forecaster" },
+  { slug: "monthly-vs-quarterly-dividends", title: "Monthly vs. Quarterly Dividends: Does Payout Frequency Matter? — Dividend Forecaster" },
 ];
 // PAGE_TO_PATH values are the URLs navigate() pushes into the history. Non-root paths
 // use a trailing slash so client-side pushState matches Cloudflare's canonical URL
@@ -1083,6 +1092,9 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
               { slug:"how-much-to-live-off-dividends", title:"How Much Do You Need to Live Off Dividends?", sub:"The portfolio your expenses require, a freedom-date projection, and why the target moves." },
               { slug:"dividend-yield-traps", title:"Is a High Dividend Yield Good? Yield Traps", sub:"When a big yield is a warning sign, and the 15-year cost of chasing one." },
               { slug:"dividend-aristocrats-and-kings", title:"Dividend Aristocrats and Kings, Explained", sub:"What 25- and 50-year raise streaks prove — and what they don't." },
+              { slug:"how-much-to-invest-for-500-a-month", title:"How Much to Invest for $500 a Month", sub:"The lump-sum answer, the build-toward answer, and why builders cross the line early." },
+              { slug:"how-to-tell-if-a-dividend-is-safe", title:"How to Tell If a Dividend Is Safe", sub:"Five checks that catch most cuts before the announcement." },
+              { slug:"monthly-vs-quarterly-dividends", title:"Monthly vs. Quarterly Dividends", sub:"What payout frequency actually changes — measured, not assumed." },
             ].map(item => (
               <div key={item.slug} style={{ background:t.sf, border:`1px solid ${t.bd2}`, borderRadius:14, padding:"16px 20px" }}>
                 <a href={`/learn/${item.slug}/`} onClick={e => { e.preventDefault(); navigate(`article:${item.slug}`); }} style={{ color:t.ac, fontSize:16, fontWeight:600, textDecoration:"none", fontFamily:FONT }}>{item.title}</a>
