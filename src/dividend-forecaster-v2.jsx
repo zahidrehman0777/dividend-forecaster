@@ -15,6 +15,8 @@ import DividendSafety from "./articles/DividendSafety.jsx";
 import PayoutFrequency from "./articles/PayoutFrequency.jsx";
 import MarketCrashDividends from "./articles/MarketCrashDividends.jsx";
 import LumpSumVsMonthly from "./articles/LumpSumVsMonthly.jsx";
+import OneDollarADay from "./articles/OneDollarADay.jsx";
+import DividendsVsSelling from "./articles/DividendsVsSelling.jsx";
 
 // Article slug → component. Add here when scaffolding a new article.
 const ARTICLE_COMPONENTS = {
@@ -32,6 +34,8 @@ const ARTICLE_COMPONENTS = {
   "monthly-vs-quarterly-dividends": PayoutFrequency,
   "what-a-market-crash-does-to-dividends": MarketCrashDividends,
   "lump-sum-vs-monthly-investing": LumpSumVsMonthly,
+  "what-one-dollar-a-day-builds": OneDollarADay,
+  "living-off-dividends-vs-selling-shares": DividendsVsSelling,
 };
 
 const ADS_ENABLED = false;
@@ -63,6 +67,8 @@ const ARTICLES = [
   { slug: "monthly-vs-quarterly-dividends", title: "Monthly vs. Quarterly Dividends: Does Payout Frequency Matter? — Dividend Forecaster" },
   { slug: "what-a-market-crash-does-to-dividends", title: "What a Market Crash Actually Does to Dividend Income — Dividend Forecaster" },
   { slug: "lump-sum-vs-monthly-investing", title: "Lump Sum vs. Monthly Investing: Which Builds More? — Dividend Forecaster" },
+  { slug: "what-one-dollar-a-day-builds", title: "What $1 a Day Actually Builds (and What It Doesn't) — Dividend Forecaster" },
+  { slug: "living-off-dividends-vs-selling-shares", title: "Living Off Dividends vs. Selling Shares in Retirement — Dividend Forecaster" },
 ];
 // PAGE_TO_PATH values are the URLs navigate() pushes into the history. Non-root paths
 // use a trailing slash so client-side pushState matches Cloudflare's canonical URL
@@ -1103,6 +1109,8 @@ export default function DividendForecasterV2({ ssrPath } = {}) {
               { slug:"monthly-vs-quarterly-dividends", title:"Monthly vs. Quarterly Dividends", sub:"What payout frequency actually changes — measured, not assumed." },
               { slug:"what-a-market-crash-does-to-dividends", title:"What a Market Crash Does to Dividend Income", sub:"Prices fell 55% in 2008. Dividends fell 24%. Both halves of that sentence matter." },
               { slug:"lump-sum-vs-monthly-investing", title:"Lump Sum vs. Monthly Investing", sub:"The measured gap, the model's bias, and the one strategy that loses to both." },
+              { slug:"what-one-dollar-a-day-builds", title:"What $1 a Day Actually Builds", sub:"The honest 30-year number — and why the million-dollar version is a rate trick." },
+              { slug:"living-off-dividends-vs-selling-shares", title:"Living Off Dividends vs. Selling Shares", sub:"Natural yield or the 4% rule — where each one breaks, and the hybrid in between." },
             ].map(item => (
               <div key={item.slug} style={{ background:t.sf, border:`1px solid ${t.bd2}`, borderRadius:14, padding:"16px 20px" }}>
                 <a href={`/learn/${item.slug}/`} onClick={e => { e.preventDefault(); navigate(`article:${item.slug}`); }} style={{ color:t.ac, fontSize:16, fontWeight:600, textDecoration:"none", fontFamily:FONT }}>{item.title}</a>
